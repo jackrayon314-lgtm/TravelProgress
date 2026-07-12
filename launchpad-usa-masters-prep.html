@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Launchpad — USA Masters Prep</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --deep: #2E0A3D;
+    --navy2: #6B2C91;
+    --teal: #A66AD1;
+    --violet: #A83FAE;
+    --gold: #FF8FCB;
+    --ink: #FBF3FA;
+    --ink-dim: rgba(251,243,250,0.72);
+    --ink-faint: rgba(251,243,250,0.46);
+    --glow: #2ED47A;
+    --danger: #F87171;
+    --card-bg: rgba(251,243,250,0.06);
+    --card-border: rgba(251,243,250,0.14);
+    --field-bg: rgba(251,243,250,0.06);
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; }
+
+  html, body{
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  body{
+    background: linear-gradient(125deg, var(--deep), var(--navy2) 30%, var(--violet) 68%, var(--teal) 100%);
+    background-size: 300% 300%;
+    animation: drift 26s ease-in-out infinite;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6vh 6vw 8vh;
+    position: relative;
+  }
+
+  @keyframes drift{
+    0%   { background-position: 0% 20%; }
+    50%  { background-position: 100% 80%; }
+    100% { background-position: 0% 20%; }
+  }
+
+  .glow{
+    position: absolute;
+    top: -10vw;
+    left: -6vw;
+    width: 44vw;
+    height: 44vw;
+    max-width: 600px;
+    max-height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 45% 45%, rgba(180,122,224,0.45), rgba(255,143,203,0.18) 55%, transparent 75%);
+    filter: blur(2px);
+    animation: pulse 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  @keyframes pulse{
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50%      { transform: scale(1.08); opacity: 1; }
+  }
+
+  .flight-path{
+    position: absolute;
+    top: 4vh;
+    right: 4vw;
+    width: 220px;
+    height: 120px;
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .plane{
+    offset-path: path('M10,100 C60,10 160,10 210,90');
+    offset-rotate: auto;
+    animation: fly 9s linear infinite;
+  }
+  @keyframes fly{
+    0%   { offset-distance: 0%; opacity: 0; }
+    8%   { opacity: 1; }
+    92%  { opacity: 1; }
+    100% { offset-distance: 100%; opacity: 0; }
+  }
+
+  .page-grid{
+    width: 100%;
+    max-width: 1120px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    position: relative;
+    z-index: 1;
+  }
+  .main-col{
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .side-col{ width: 100%; }
+
+  @media (min-width: 960px){
+    .page-grid{ flex-direction: row; align-items: flex-start; }
+    .side-col{ width: 320px; flex: none; position: sticky; top: 24px; }
+  }
+
+  .eyebrow{
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    margin-bottom: 14px;
+    text-align: center;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+
+  .sync-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--ink-dim);
+    background: rgba(251,243,250,0.08);
+    border: 1px solid var(--card-border);
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+  }
+  .sync-dot{ width: 7px; height: 7px; border-radius: 50%; background: #FBBF24; }
+  .sync-pill.synced .sync-dot{ background: var(--glow); }
+
+  .date{
+    font-size: 0.92rem;
+    color: var(--ink-dim);
+    margin-bottom: 36px;
+    text-align: center;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+
+  .sync-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--ink-dim);
+    background: rgba(251,243,250,0.08);
+    border: 1px solid var(--card-border);
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+  }
+  .sync-dot{ width: 7px; height: 7px; border-radius: 50%; background: #FBBF24; }
+  .sync-pill.synced .sync-dot{ background: var(--glow); }
+
+  .quote-mark{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 2.1rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+  }
+  .quote{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.8vw, 2.4rem);
+    line-height: 1.2;
+    text-align: center;
+    letter-spacing: -0.01em;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.4);
+    max-width: 680px;
+  }
+  .quote-author{
+    margin-top: 18px;
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.05em;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+
+  /* overall progress */
+  .overall{
+    margin-top: 40px;
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 18px;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .overall-ring svg{ transform: rotate(-90deg); flex: none; }
+  .ring-bg{ fill: none; stroke: rgba(251,243,250,0.15); stroke-width: 6; }
+  .ring-fg{ fill: none; stroke: var(--glow); stroke-width: 6; stroke-linecap: round; transition: stroke-dasharray 0.4s ease; }
+  .overall-text{ flex: 1; }
+  .overall-title{ font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 3px; }
+  .overall-sub{ font-size: 0.82rem; color: var(--ink-dim); }
+
+  /* category accordion */
+  .categories{ width: 100%; margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+
+  .cat{
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  .cat-header{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cat-index{
+    flex: 0 0 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: rgba(251,243,250,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--ink-dim);
+  }
+  .cat-title-wrap{ flex: 1; min-width: 0; }
+  .cat-title{ font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1rem; }
+  .cat-progress-text{ font-size: 0.78rem; color: var(--ink-faint); margin-top: 2px; }
+  .cat-mini-bar{
+    width: 60px;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(251,243,250,0.14);
+    overflow: hidden;
+    flex: none;
+  }
+  .cat-mini-fill{ height: 100%; background: var(--glow); border-radius: 3px; transition: width 0.3s ease; }
+  .chevron{
+    flex: none;
+    width: 20px;
+    height: 20px;
+    color: var(--ink-dim);
+    transition: transform 0.25s ease;
+  }
+  .cat.open .chevron{ transform: rotate(180deg); }
+
+  .cat-panel{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
+  .cat.open .cat-panel{ max-height: 3000px; }
+
+  .cat-panel-inner{ padding: 0 18px 20px; }
+
+  .tip-box{
+    background: rgba(255,143,203,0.1);
+    border: 1px solid rgba(255,143,203,0.28);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 0.83rem;
+    line-height: 1.55;
+    color: var(--ink-dim);
+  }
+  .tip-box b{ color: var(--gold); font-weight: 700; }
+
+  .item{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 2px;
+    border-bottom: 1px solid rgba(251,243,250,0.08);
+  }
+  .item:last-child{ border-bottom: none; }
+
+  .box{
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 1.5px solid rgba(251,243,250,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .box svg{ width: 13px; height: 13px; opacity: 0; transform: scale(0.6); transition: all 0.2s ease; }
+  .item.checked .box{ background: var(--glow); border-color: var(--glow); }
+  .item.checked .box svg{ opacity: 1; transform: scale(1); }
+  .item.checked .label{ color: var(--ink-dim); }
+
+  .label{
+    font-size: 0.9rem;
+    font-weight: 500;
+    width: 34%;
+    min-width: 100px;
+    flex: 0 0 auto;
+  }
+
+  .field{
+    flex: 1 1 auto;
+    background: var(--field-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    color: var(--ink);
+    outline: none;
+    min-width: 0;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .field::placeholder{ color: var(--ink-faint); }
+  .field:focus{ border-color: var(--gold); background: rgba(251,243,250,0.1); }
+
+  .item-date{
+    flex: none;
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+    white-space: nowrap;
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: rgba(251,243,250,0.06);
+  }
+
+  .remove-btn{
+    flex: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--ink-faint);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    transition: color 0.15s ease;
+  }
+  .remove-btn:hover{ color: var(--danger); }
+
+  .add-row{
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .add-input{
+    flex: 1;
+    background: var(--field-bg);
+    border: 1px dashed var(--card-border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.83rem;
+    color: var(--ink);
+    outline: none;
+  }
+  .add-input::placeholder{ color: var(--ink-faint); }
+  .add-input:focus{ border-color: var(--teal); border-style: solid; }
+  .add-btn{
+    flex: none;
+    padding: 0 16px;
+    border-radius: 8px;
+    border: none;
+    background: var(--teal);
+    color: var(--deep);
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .add-btn:hover{ opacity: 0.88; }
+
+  .itinerary-link{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(180,122,224,0.12);
+    border: 1px solid rgba(180,122,224,0.35);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .itinerary-link:hover{ background: rgba(180,122,224,0.2); }
+  .itinerary-link span{ color: var(--teal); }
+
+  .restore-link{
+    margin-top: 12px;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    text-decoration: underline;
+    cursor: pointer;
+    display: inline-block;
+  }
+  .restore-link:hover{ color: var(--ink-dim); }
+
+  .footer-note{
+    margin-top: 26px;
+    text-align: center;
+    font-size: 0.76rem;
+    color: var(--ink-faint);
+    line-height: 1.6;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+  }
+
+  /* ---------- Progress calendar (sidebar) ---------- */
+  .cal-card{
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 18px;
+    padding: 20px 18px;
+  }
+  .cal-card-title{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 3px;
+  }
+  .cal-card-sub{
+    font-size: 0.76rem;
+    color: var(--ink-faint);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .cal-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .cal-month{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+  }
+  .cal-nav{ display: flex; gap: 6px; }
+  .cal-btn{
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    border: 1px solid var(--card-border);
+    background: rgba(251,243,250,0.06);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.15s ease;
+  }
+  .cal-btn:hover{ background: rgba(251,243,250,0.16); }
+
+  .cal-grid{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+  .cal-dow-grid{ margin-bottom: 4px; }
+  .cal-dow{
+    text-align: center;
+    font-size: 0.6rem;
+    letter-spacing: 0.03em;
+    color: var(--ink-faint);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .cal-day{
+    position: relative;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    color: var(--ink-dim);
+    background: rgba(251,243,250,0.04);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .cal-day:hover{ background: rgba(251,243,250,0.14); }
+  .cal-day.outside{ color: rgba(251,243,250,0.18); background: transparent; }
+  .cal-day.is-today{ box-shadow: inset 0 0 0 1.5px var(--gold); font-weight: 700; color: var(--ink); }
+  .cal-day.selected{ outline: 1.5px solid var(--teal); }
+  .cal-day.heat-1{ background: rgba(46,212,122,0.22); }
+  .cal-day.heat-2{ background: rgba(46,212,122,0.42); }
+  .cal-day.heat-3{ background: rgba(46,212,122,0.65); color: #073016; font-weight: 700; }
+  .cal-day-count{
+    position: absolute;
+    bottom: 2px;
+    font-size: 0.5rem;
+    font-weight: 700;
+    color: inherit;
+    opacity: 0.85;
+  }
+
+  .cal-detail{
+    margin-top: 14px;
+    border-top: 1px solid var(--card-border);
+    padding-top: 12px;
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+    min-height: 20px;
+  }
+  .cal-detail-date{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .cal-detail-row{
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+  }
+  .cal-detail-empty{ color: var(--ink-faint); }
+
+  /* ---------- Milestone celebration ---------- */
+  .celebrate-overlay{
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20,10,6,0.6);
+    padding: 24px;
+  }
+  .celebrate-overlay.show{ display: flex; }
+  .celebrate-card{
+    position: relative;
+    z-index: 2;
+    background: var(--navy2);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 34px 28px;
+    text-align: center;
+    max-width: 320px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: pop 0.35s ease;
+  }
+  @keyframes pop{
+    0%{ transform: scale(0.85); opacity: 0; }
+    100%{ transform: scale(1); opacity: 1; }
+  }
+  .celebrate-emoji{
+    font-size: 3rem;
+    margin-bottom: 14px;
+    animation: bounce 1.1s ease infinite;
+  }
+  @keyframes bounce{
+    0%, 100%{ transform: translateY(0); }
+    50%{ transform: translateY(-10px); }
+  }
+  .celebrate-text{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    line-height: 1.4;
+    margin-bottom: 20px;
+  }
+  .celebrate-btn{
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    background: var(--gold);
+    color: var(--deep);
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .confetti-layer{
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .confetti-piece{
+    position: absolute;
+    top: -10px;
+    width: 8px;
+    height: 14px;
+    opacity: 0.9;
+    animation: confetti-fall linear forwards;
+  }
+  @keyframes confetti-fall{
+    0%{ transform: translateY(0) rotate(0deg); opacity: 1; }
+    100%{ transform: translateY(110vh) rotate(540deg); opacity: 0.3; }
+  }
+
+  @media (max-width: 480px){
+    body{ padding: 8vh 5vw 6vh; }
+    .item{ flex-wrap: wrap; }
+    .label{ width: calc(100% - 34px); }
+    .field{ flex-basis: 100%; margin-left: 34px; width: calc(100% - 34px); }
+    .remove-btn{ margin-left: auto; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    body{ animation: none; }
+    .glow{ animation: none; }
+    .plane{ animation: none; opacity: 0; }
+    .celebrate-emoji{ animation: none; }
+    .confetti-piece{ animation: none; display: none; }
+  }
+
+  /* ---------- Lock screen ---------- */
+  .lock-overlay{
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: linear-gradient(135deg, var(--deep), var(--navy2) 55%, #1B0526);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .lock-card{ width: 100%; max-width: 340px; text-align: center; }
+  .lock-eyebrow{
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .lock-title{ font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem; margin-bottom: 6px; }
+  .lock-sub{ font-size: 0.85rem; color: var(--ink-dim); margin-bottom: 28px; }
+  .pin-inputs{ display: flex; gap: 8px; justify-content: center; margin-bottom: 18px; }
+  .pin-box{
+    width: 42px;
+    height: 52px;
+    border-radius: 10px;
+    border: 1.5px solid var(--card-border);
+    background: rgba(251,243,250,0.07);
+    color: var(--ink);
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .pin-box:focus{ border-color: var(--gold); }
+  .pin-inputs.shake{ animation: shake 0.4s ease; }
+  @keyframes shake{
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+  }
+  .lock-btn{
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: var(--gold);
+    color: var(--deep);
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .lock-btn:hover{ opacity: 0.9; }
+  .lock-error{ min-height: 20px; font-size: 0.8rem; color: var(--danger); margin-top: 12px; }
+  body.locked .page-grid, body.locked .glow, body.locked .flight-path{ display: none; }
+</style>
+</head>
+<body class="locked">
+
+<div class="lock-overlay" id="lockOverlay">
+  <div class="lock-card">
+    <div class="lock-eyebrow">Launchpad</div>
+    <div class="lock-title">Enter access code</div>
+    <div class="lock-sub">This tracker is private. Enter the 6-digit code to continue.</div>
+    <div class="pin-inputs" id="pinInputs">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+    </div>
+    <button class="lock-btn" id="lockUnlockBtn">Unlock</button>
+    <div class="lock-error" id="lockError"></div>
+  </div>
+</div>
+
+<div class="glow"></div>
+<svg class="flight-path" viewBox="0 0 220 120" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10,100 C60,10 160,10 210,90" fill="none" stroke="rgba(251,243,250,0.35)" stroke-width="1.5" stroke-dasharray="4 6"/>
+  <text class="plane" x="0" y="0" font-size="16">&#9992;</text>
+</svg>
+
+<div class="celebrate-overlay" id="celebrateOverlay">
+  <div class="celebrate-card">
+    <div class="celebrate-emoji" id="celebrateEmoji">🎉</div>
+    <div class="celebrate-text" id="celebrateText"></div>
+    <button class="celebrate-btn" id="celebrateBtn">Keep going</button>
+  </div>
+  <div class="confetti-layer" id="confettiLayer"></div>
+</div>
+
+<div class="page-grid">
+  <div class="main-col">
+    <div class="eyebrow">Launchpad — USA Masters Prep</div>
+    <div class="sync-pill" id="syncPill"><span class="sync-dot"></span><span id="syncText">Checking connection...</span></div>
+    <div class="date" id="dateLabel"></div>
+
+    <div class="quote-mark">"</div>
+    <div class="quote" id="quoteText"></div>
+    <div class="quote-author">— Launchpad</div>
+
+    <div class="overall">
+      <div class="overall-ring">
+        <svg width="56" height="56" viewBox="0 0 56 56">
+          <circle class="ring-bg" cx="28" cy="28" r="24"></circle>
+          <circle class="ring-fg" id="overallRing" cx="28" cy="28" r="24" stroke-dasharray="0 151"></circle>
+        </svg>
+      </div>
+      <div class="overall-text">
+        <div class="overall-title"><span id="overallDone">0</span> of <span id="overallTotal">0</span> tasks complete</div>
+        <div class="overall-sub">Across <span id="catCount">0</span> categories — tap any section below to open it</div>
+      </div>
+    </div>
+
+    <div class="categories" id="categories"></div>
+
+    <div class="footer-note">This checklist is a general guide — always confirm exact requirements with your university's international office and the U.S. consulate.<br>Everything you check or type is saved automatically on this device.</div>
+  </div>
+
+  <aside class="side-col">
+    <div class="cal-card">
+      <div class="cal-card-title">Progress calendar</div>
+      <div class="cal-card-sub">Days you completed tasks on. Tap a day for the breakdown.</div>
+      <div class="cal-header">
+        <div class="cal-month" id="calMonthLabel"></div>
+        <div class="cal-nav">
+          <button class="cal-btn" id="calPrevBtn" aria-label="Previous month">&#8249;</button>
+          <button class="cal-btn" id="calNextBtn" aria-label="Next month">&#8250;</button>
+        </div>
+      </div>
+      <div class="cal-grid cal-dow-grid" id="calDow"></div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-detail" id="calDetail"></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+  // ===================== ACCESS PIN =====================
+  const PIN_HASH = "070ab0cb88ffc0446d9c038f282b9c69e1a51a269f32d5dd012483142b4fec82";
+  const UNLOCK_KEY = "launchpad_unlocked_v1";
+
+  async function sha256Hex(str){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  function unlockApp(){
+    document.body.classList.remove('locked');
+    const overlay = document.getElementById('lockOverlay');
+    if(overlay) overlay.style.display = 'none';
+  }
+
+  (function initLock(){
+    try{
+      if(localStorage.getItem(UNLOCK_KEY) === PIN_HASH){
+        unlockApp();
+        return;
+      }
+    }catch(e){}
+
+    const boxes = Array.from(document.querySelectorAll('.pin-box'));
+    const pinInputs = document.getElementById('pinInputs');
+    const errorEl = document.getElementById('lockError');
+    const unlockBtn = document.getElementById('lockUnlockBtn');
+
+    boxes[0].focus();
+
+    boxes.forEach((box, i) => {
+      box.addEventListener('input', () => {
+        box.value = box.value.replace(/[^0-9]/g, '').slice(0, 1);
+        if(box.value && i < boxes.length - 1) boxes[i + 1].focus();
+        if(box.value && i === boxes.length - 1) attemptUnlock();
+      });
+      box.addEventListener('keydown', (e) => {
+        if(e.key === 'Backspace' && !box.value && i > 0) boxes[i - 1].focus();
+        if(e.key === 'Enter') attemptUnlock();
+      });
+      box.addEventListener('paste', (e) => {
+        const text = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
+        if(text.length){
+          e.preventDefault();
+          text.slice(0, 6).split('').forEach((ch, idx) => { if(boxes[idx]) boxes[idx].value = ch; });
+          const nextEmpty = boxes.findIndex(b => !b.value);
+          (nextEmpty === -1 ? boxes[5] : boxes[nextEmpty]).focus();
+          if(text.length >= 6) attemptUnlock();
+        }
+      });
+    });
+
+    unlockBtn.addEventListener('click', attemptUnlock);
+
+    async function attemptUnlock(){
+      const code = boxes.map(b => b.value).join('');
+      if(code.length !== 6){ showError('Enter all 6 digits.'); return; }
+      const hash = await sha256Hex(code);
+      if(hash === PIN_HASH){
+        try{ localStorage.setItem(UNLOCK_KEY, PIN_HASH); }catch(e){}
+        unlockApp();
+      } else {
+        showError('Incorrect code. Try again.');
+        pinInputs.classList.remove('shake');
+        void pinInputs.offsetWidth;
+        pinInputs.classList.add('shake');
+        boxes.forEach(b => b.value = '');
+        boxes[0].focus();
+      }
+    }
+    function showError(msg){ errorEl.textContent = msg; }
+  })();
+
+  // ===================== FIREBASE SYNC =====================
+  // Replace the placeholder values with your own free Firebase project's
+  // config to sync data across devices. Leave as-is for local-only mode.
+  const firebaseConfig = {
+		 apiKey: "AIzaSyDGSUql4dvz5YbwsQAfgMuCgnfA3ozdkv8",
+		  authDomain: "travelprgs.firebaseapp.com",
+		  projectId: "travelprgs",
+		  storageBucket: "travelprgs.firebasestorage.app",
+		  messagingSenderId: "144436969227",
+		  appId: "1:144436969227:web:082f8c79e33dc5cbcd2c0e"
+  };
+  const isConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY";
+  let db = null, docRef = null, firestoreFns = null, cloudSaveTimer = null;
+
+  const syncPill = document.getElementById('syncPill');
+  const syncText = document.getElementById('syncText');
+  function setSyncStatus(mode){
+    if(mode === 'synced'){ syncPill.classList.add('synced'); syncText.textContent = 'Synced across devices'; }
+    else if(mode === 'connecting'){ syncPill.classList.remove('synced'); syncText.textContent = 'Connecting...'; }
+    else { syncPill.classList.remove('synced'); syncText.textContent = 'Local only — add Firebase config to sync'; }
+  }
+
+  // ===================== QUOTES =====================
+  const QUOTES = [
+    "New country, new chapter — you've already done the hardest part by deciding to go.",
+    "Every form you file is one step closer to walking that campus.",
+    "You didn't come this far to stop at the paperwork.",
+    "Checklists today, classrooms across the world tomorrow.",
+    "The visa stamp is just proof of everything you already earned.",
+    "Pack light, dream big.",
+    "This is what preparation for a bigger life looks like.",
+    "One document at a time, one step closer to takeoff.",
+    "You're not just moving countries, you're moving your whole future forward.",
+    "Being organized now buys you peace of mind later.",
+    "Your future campus is waiting. Let's get you there, fully ready.",
+    "Every checkbox here is a rehearsal for the courage this move takes.",
+    "You've got this — one form, one flight, one fresh start.",
+    "Great journeys are built from small, completed tasks.",
+    "Confidence at the visa counter starts with organization at home.",
+    "Somewhere across the ocean, a seat with your name is waiting.",
+    "You're building a life, not just booking a flight.",
+    "Preparation is how ambition becomes real.",
+    "Homesick days will come. Let today not be one of the hard ones — get a task done.",
+    "The distance is temporary. The degree is forever."
+  ];
+
+  function dayOfYear(d){
+    const start = new Date(d.getFullYear(), 0, 0);
+    return Math.floor((d - start) / 86400000);
+  }
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  document.getElementById('quoteText').textContent = QUOTES[dayOfYear(today) % QUOTES.length];
+  document.getElementById('dateLabel').textContent = today.toLocaleDateString(undefined, {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+
+  // ===================== CATEGORY DATA =====================
+  const CATEGORIES = [
+    {
+      id: "admissions",
+      title: "University Admission & Documents",
+      tip: "Verify every detail on your I-20 (name, program, funding amount) matches your passport exactly — even small mismatches can cause visa delays. Pay the SEVIS I-901 fee at least 3 days before your visa interview and keep several printed copies of your I-20.",
+      items: [
+        "I-20 form received from university",
+        "Official admission / offer letter",
+        "SEVIS I-901 fee paid",
+        "Official transcripts sent to university",
+        "Enrollment confirmation deposit paid",
+        "Course registration / credits confirmed"
+      ]
+    },
+    {
+      id: "visa",
+      title: "F-1 Visa Application",
+      tip: "Book your visa interview slot as early as possible — wait times vary widely by consulate. Carry both originals and photocopies of every document, and be ready to clearly explain your program, funding, and post-study plans.",
+      items: [
+        "DS-160 form completed and confirmation saved",
+        "Visa fee (MRV) paid",
+        "Visa interview appointment scheduled",
+        "Passport valid 6+ months beyond program end",
+        "Passport-size photos as per U.S. visa specs",
+        "Visa interview document folder prepared"
+      ]
+    },
+    {
+      id: "finance",
+      title: "Financial Preparation",
+      tip: "Your funding proof should comfortably cover at least one year of tuition plus living costs, as stated on your I-20. Carry a small amount of USD cash for arrival and load the rest onto a forex or travel card.",
+      items: [
+        "Bank statements / education loan sanction letter ready",
+        "Affidavit of support (if sponsored) notarized",
+        "Forex card or international travel card arranged",
+        "Tuition payment plan / first installment confirmed",
+        "Emergency fund set aside separately",
+        "Initial USD cash exchanged for arrival"
+      ]
+    },
+    {
+      id: "academics",
+      title: "Academic & Test Documents",
+      tip: "Send official test scores directly from the testing agency if your university requires it — self-reported scores are often not enough for final enrollment. Keep both digital scans and physical copies of everything.",
+      items: [
+        "GRE / GMAT official scorecard",
+        "TOEFL / IELTS / Duolingo official scorecard",
+        "Sealed official transcripts (extra sets)",
+        "Statement of Purpose — printed copies",
+        "Letters of Recommendation — copies saved",
+        "Updated resume / CV"
+      ]
+    },
+    {
+      id: "health",
+      title: "Health & Insurance",
+      tip: "Check your university's mandatory immunization list well in advance — some vaccines need multiple doses spaced weeks apart. If you take prescription medication, carry a doctor's letter explaining it in English.",
+      items: [
+        "General medical checkup completed",
+        "Required vaccinations completed",
+        "Health insurance (university or private) arranged",
+        "Prescription medicines with doctor's note packed",
+        "Copies of medical / vaccination records"
+      ]
+    },
+    {
+      id: "housing",
+      title: "Housing & Accommodation",
+      tip: "On-campus housing often fills up quickly, so apply the moment applications open. For off-campus options, carefully check lease terms, deposit refund conditions, and proximity to campus before committing.",
+      items: [
+        "On-campus / off-campus housing researched",
+        "Housing application submitted",
+        "Security deposit paid",
+        "Roommate arrangement confirmed (if applicable)",
+        "US address noted for records / mail forwarding"
+      ]
+    },
+    {
+      id: "packing",
+      title: "Packing & Essentials",
+      tip: "Keep all original important documents in your hand luggage, never in checked baggage. Confirm your airline's checked-baggage allowance for international students, which is sometimes higher than standard limits.",
+      items: [
+        "Weather-appropriate clothing for your destination",
+        "Original documents + copies (passport, I-20, admit letter, financials)",
+        "Electronics and US plug adapters",
+        "Personal medicines packed",
+        "Laptop, chargers, and study essentials"
+      ]
+    },
+    {
+      id: "banking",
+      title: "Banking & Finance in the US",
+      tip: "Many banks offer student accounts with no minimum balance requirement — compare a couple of options before choosing. An SSN is generally only issued if you have a confirmed on-campus job offer, so plan accordingly.",
+      items: [
+        "US student bank account shortlisted",
+        "SSN / ITIN application plan understood",
+        "International debit or credit card ready to activate",
+        "First-month budget plan prepared"
+      ]
+    },
+    {
+      id: "predeparture",
+      title: "Pre-Departure Logistics",
+      tip: "Try to book a flight that lands during daytime hours when campus housing and international offices are open. Check whether your university offers a new-student airport pickup service.",
+      items: [
+        "Flight tickets booked",
+        "Travel insurance purchased",
+        "Airport pickup / arrival plan confirmed",
+        "International SIM or eSIM arranged",
+        "University orientation dates noted"
+      ]
+    },
+    {
+      id: "postarrival",
+      title: "Post-Arrival Checklist",
+      tip: "Complete your mandatory international student check-in with the university's international office within the first week of arrival — missing this can affect your visa status. Keep your I-20 and I-94 accessible for the first few months.",
+      items: [
+        "I-94 arrival record verified online",
+        "SEVIS check-in / international office registration done",
+        "Local SIM and bank account opened",
+        "Class registration finalized",
+        "Campus ID and health insurance activated"
+      ]
+    }
+  ];
+
+  function pad(n){ return String(n).padStart(2, '0'); }
+  function keyOf(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+  function todayKey(){ return keyOf(new Date()); }
+
+  // ===================== STORAGE =====================
+  const STORE_KEY = 'launchpad_data_v1';
+  let allData = {};
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    allData = raw ? JSON.parse(raw) : {};
+  }catch(e){ allData = {}; }
+
+  function saveAll(){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(allData)); }catch(e){}
+    if(isConfigured && db){
+      clearTimeout(cloudSaveTimer);
+      cloudSaveTimer = setTimeout(async () => {
+        try{ await firestoreFns.setDoc(docRef, allData); }
+        catch(e){ console.error('Firestore save failed', e); setSyncStatus('offline'); }
+      }, 400);
+    }
+  }
+
+  function getCatData(cat){
+    if(!allData[cat.id]){
+      allData[cat.id] = { items: {}, custom: [] };
+    }
+    const cd = allData[cat.id];
+    if(!cd.items) cd.items = {};
+    if(!cd.custom) cd.custom = [];
+    cat.items.forEach((_, i) => {
+      if(!cd.items[i]) cd.items[i] = { c: false, t: '', deleted: false, d: null };
+      if(cd.items[i].deleted === undefined) cd.items[i].deleted = false;
+      if(cd.items[i].d === undefined) cd.items[i].d = null;
+    });
+    return cd;
+  }
+
+  function catCounts(cat){
+    const cd = getCatData(cat);
+    let total = 0, done = 0;
+    cat.items.forEach((_, i) => {
+      if(cd.items[i].deleted) return;
+      total++;
+      if(cd.items[i].c) done++;
+    });
+    cd.custom.forEach(c => { total++; if(c.c) done++; });
+    return { done, total };
+  }
+
+  function toggleEntry(entry){
+    entry.c = !entry.c;
+    entry.d = entry.c ? todayKey() : null;
+  }
+
+  function buildHistory(){
+    const history = {};
+    CATEGORIES.forEach(cat => {
+      const cd = getCatData(cat);
+      cat.items.forEach((_, i) => {
+        const entry = cd.items[i];
+        if(entry.deleted || !entry.c || !entry.d) return;
+        if(!history[entry.d]) history[entry.d] = { total: 0, byCat: {} };
+        history[entry.d].total++;
+        history[entry.d].byCat[cat.id] = (history[entry.d].byCat[cat.id] || 0) + 1;
+      });
+      cd.custom.forEach(entry => {
+        if(!entry.c || !entry.d) return;
+        if(!history[entry.d]) history[entry.d] = { total: 0, byCat: {} };
+        history[entry.d].total++;
+        history[entry.d].byCat[cat.id] = (history[entry.d].byCat[cat.id] || 0) + 1;
+      });
+    });
+    return history;
+  }
+
+  // ===================== RENDER =====================
+  const catsEl = document.getElementById('categories');
+  const openState = {};
+
+  function render(){
+    catsEl.innerHTML = '';
+    let grandDone = 0, grandTotal = 0;
+
+    CATEGORIES.forEach((cat, ci) => {
+      const cd = getCatData(cat);
+      const { done, total } = catCounts(cat);
+      grandDone += done; grandTotal += total;
+
+      const catEl = document.createElement('div');
+      catEl.className = 'cat' + (openState[cat.id] ? ' open' : '');
+
+      const header = document.createElement('div');
+      header.className = 'cat-header';
+      header.innerHTML = `
+        <div class="cat-index">${String(ci + 1).padStart(2, '0')}</div>
+        <div class="cat-title-wrap">
+          <div class="cat-title">${cat.title}</div>
+          <div class="cat-progress-text">${done} of ${total} done</div>
+        </div>
+        <div class="cat-mini-bar"><div class="cat-mini-fill" style="width:${total ? (done/total*100) : 0}%"></div></div>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      `;
+      header.addEventListener('click', () => {
+        openState[cat.id] = !openState[cat.id];
+        render();
+      });
+
+      const panel = document.createElement('div');
+      panel.className = 'cat-panel';
+      const inner = document.createElement('div');
+      inner.className = 'cat-panel-inner';
+
+      inner.innerHTML = `<div class="tip-box"><b>Keep in mind:</b> ${cat.tip}</div>`;
+
+      if(cat.id === 'packing'){
+        const linkRow = document.createElement('a');
+        linkRow.href = 'packing-itinerary.html';
+        linkRow.className = 'itinerary-link';
+        linkRow.innerHTML = `Open detailed packing itinerary <span>&#8594;</span>`;
+        inner.appendChild(linkRow);
+      }
+
+      const list = document.createElement('div');
+
+      let anyDeleted = false;
+      cat.items.forEach((label, i) => {
+        const entry = cd.items[i];
+        if(entry.deleted){ anyDeleted = true; return; }
+        const row = buildItemRow(label, entry, () => {
+          toggleEntry(entry);
+          saveAll();
+          render();
+          afterChange();
+        }, (val) => { entry.t = val; saveAll(); }, () => {
+          entry.deleted = true;
+          saveAll();
+          render();
+        });
+        list.appendChild(row);
+      });
+
+      cd.custom.forEach((entry) => {
+        const row = buildItemRow(entry.label, entry, () => {
+          toggleEntry(entry);
+          saveAll();
+          render();
+          afterChange();
+        }, (val) => { entry.t = val; saveAll(); }, () => {
+          cd.custom = cd.custom.filter(x => x.id !== entry.id);
+          saveAll();
+          render();
+        });
+        list.appendChild(row);
+      });
+
+      inner.appendChild(list);
+
+      if(anyDeleted){
+        const restore = document.createElement('div');
+        restore.className = 'restore-link';
+        restore.textContent = 'Restore removed default items';
+        restore.addEventListener('click', () => {
+          cat.items.forEach((_, i) => { cd.items[i].deleted = false; });
+          saveAll();
+          render();
+        });
+        inner.appendChild(restore);
+      }
+
+      const addRow = document.createElement('div');
+      addRow.className = 'add-row';
+      addRow.innerHTML = `
+        <input class="add-input" type="text" placeholder="Add your own checklist item...">
+        <button class="add-btn">Add</button>
+      `;
+      const addInput = addRow.querySelector('.add-input');
+      const addBtn = addRow.querySelector('.add-btn');
+      function addCustom(){
+        const val = addInput.value.trim();
+        if(!val) return;
+        cd.custom.push({ id: 'c' + Date.now() + Math.random().toString(16).slice(2), label: val, c: false, t: '' });
+        saveAll();
+        openState[cat.id] = true;
+        render();
+      }
+      addBtn.addEventListener('click', addCustom);
+      addInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') addCustom(); });
+      inner.appendChild(addRow);
+
+      panel.appendChild(inner);
+      catEl.appendChild(header);
+      catEl.appendChild(panel);
+      catsEl.appendChild(catEl);
+    });
+
+    document.getElementById('overallDone').textContent = grandDone;
+    document.getElementById('overallTotal').textContent = grandTotal;
+    document.getElementById('catCount').textContent = CATEGORIES.length;
+    const circumference = 2 * Math.PI * 24;
+    const frac = grandTotal ? grandDone / grandTotal : 0;
+    document.getElementById('overallRing').setAttribute('stroke-dasharray', `${(circumference * frac).toFixed(1)} ${circumference.toFixed(1)}`);
+  }
+
+  function formatShortDate(dateKeyStr){
+    const [y, m, d] = dateKeyStr.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  }
+
+  function buildItemRow(label, entry, onToggle, onNote, onRemove){
+    const row = document.createElement('div');
+    row.className = 'item' + (entry.c ? ' checked' : '');
+    row.innerHTML = `
+      <span class="box" role="checkbox" aria-checked="${entry.c}">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="#2E0A3D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="label">${label}</span>
+      <input class="field" type="text" placeholder="Add note...">
+      ${entry.c && entry.d ? `<span class="item-date">${formatShortDate(entry.d)}</span>` : ''}
+      ${onRemove ? '<button class="remove-btn" title="Remove">&times;</button>' : ''}
+    `;
+    row.querySelector('.field').value = entry.t;
+    row.querySelector('.box').addEventListener('click', onToggle);
+    row.querySelector('.field').addEventListener('input', (e) => onNote(e.target.value));
+    if(onRemove){
+      row.querySelector('.remove-btn').addEventListener('click', onRemove);
+    }
+    return row;
+  }
+
+  // ===================== PROGRESS CALENDAR =====================
+  const nowForCal = new Date();
+  let calViewYear = nowForCal.getFullYear();
+  let calViewMonth = nowForCal.getMonth();
+  let calSelectedKey = null;
+
+  const CAL_DOW = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const CAL_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  const calDowEl = document.getElementById('calDow');
+  const calGridEl = document.getElementById('calGrid');
+  const calMonthLabel = document.getElementById('calMonthLabel');
+  const calDetailEl = document.getElementById('calDetail');
+
+  CAL_DOW.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-dow';
+    el.textContent = d;
+    calDowEl.appendChild(el);
+  });
+
+  function catTitleById(id){
+    const cat = CATEGORIES.find(c => c.id === id);
+    return cat ? cat.title : id;
+  }
+
+  function renderCalendar(){
+    const history = buildHistory();
+    calMonthLabel.textContent = `${CAL_MONTHS[calViewMonth]} ${calViewYear}`;
+    calGridEl.innerHTML = '';
+
+    const firstOfMonth = new Date(calViewYear, calViewMonth, 1);
+    const startOffset = firstOfMonth.getDay();
+    const daysInMonth = new Date(calViewYear, calViewMonth + 1, 0).getDate();
+    const daysInPrevMonth = new Date(calViewYear, calViewMonth, 0).getDate();
+
+    const cells = [];
+    for(let i = startOffset - 1; i >= 0; i--){
+      cells.push({ day: daysInPrevMonth - i, outside: true, y: calViewMonth === 0 ? calViewYear - 1 : calViewYear, m: calViewMonth === 0 ? 11 : calViewMonth - 1 });
+    }
+    for(let d = 1; d <= daysInMonth; d++){
+      cells.push({ day: d, outside: false, y: calViewYear, m: calViewMonth });
+    }
+    while(cells.length % 7 !== 0){
+      const last = cells[cells.length - 1];
+      const nd = new Date(last.y, last.m, last.day + 1);
+      cells.push({ day: nd.getDate(), outside: true, y: nd.getFullYear(), m: nd.getMonth() });
+    }
+
+    cells.forEach(cell => {
+      const cellDate = new Date(cell.y, cell.m, cell.day);
+      const cellKey = keyOf(cellDate);
+      const rec = history[cellKey];
+      const count = rec ? rec.total : 0;
+
+      const el = document.createElement('div');
+      let cls = 'cal-day' + (cell.outside ? ' outside' : '');
+      if(cellKey === todayKey()) cls += ' is-today';
+      if(cellKey === calSelectedKey) cls += ' selected';
+      if(count >= 1 && count <= 2) cls += ' heat-1';
+      else if(count >= 3 && count <= 5) cls += ' heat-2';
+      else if(count > 5) cls += ' heat-3';
+      el.className = cls;
+      el.innerHTML = `${cell.day}` + (count > 0 ? `<span class="cal-day-count">${count}</span>` : '');
+      el.addEventListener('click', () => {
+        calSelectedKey = cellKey;
+        if(cell.outside){ calViewYear = cell.y; calViewMonth = cell.m; }
+        renderCalendar();
+      });
+      calGridEl.appendChild(el);
+    });
+
+    renderCalDetail(history);
+  }
+
+  function renderCalDetail(history){
+    if(!calSelectedKey){
+      calDetailEl.innerHTML = `<div class="cal-detail-empty">Tap any day to see what you completed.</div>`;
+      return;
+    }
+    const rec = history[calSelectedKey];
+    const [y, m, d] = calSelectedKey.split('-').map(Number);
+    const label = new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+
+    if(!rec || rec.total === 0){
+      calDetailEl.innerHTML = `<div class="cal-detail-date">${label}</div><div class="cal-detail-empty">No tasks completed this day.</div>`;
+      return;
+    }
+
+    let rows = `<div class="cal-detail-date">${label} — ${rec.total} completed</div>`;
+    Object.keys(rec.byCat).forEach(catId => {
+      rows += `<div class="cal-detail-row"><span>${catTitleById(catId)}</span><span>${rec.byCat[catId]}</span></div>`;
+    });
+    calDetailEl.innerHTML = rows;
+  }
+
+  document.getElementById('calPrevBtn').addEventListener('click', () => {
+    calViewMonth--;
+    if(calViewMonth < 0){ calViewMonth = 11; calViewYear--; }
+    renderCalendar();
+  });
+  document.getElementById('calNextBtn').addEventListener('click', () => {
+    calViewMonth++;
+    if(calViewMonth > 11){ calViewMonth = 0; calViewYear++; }
+    renderCalendar();
+  });
+
+  // ===================== MILESTONES & CELEBRATIONS =====================
+  const MILESTONE_KEY = 'launchpad_milestones_v1';
+  let shownMilestones = [];
+  try{
+    const raw = localStorage.getItem(MILESTONE_KEY);
+    shownMilestones = raw ? JSON.parse(raw) : [];
+  }catch(e){ shownMilestones = []; }
+
+  function saveMilestones(){
+    try{ localStorage.setItem(MILESTONE_KEY, JSON.stringify(shownMilestones)); }catch(e){}
+  }
+
+  const OVERALL_MILESTONES = [
+    { pct: 25, emoji: '🌱', text: "Great start — 25% of your prep is done!" },
+    { pct: 50, emoji: '🚀', text: "Halfway there! Keep going." },
+    { pct: 75, emoji: '✈️', text: "Almost boarding — 75% complete!" },
+    { pct: 100, emoji: '🎓', text: "Fully prepped! You're ready for takeoff." }
+  ];
+
+  function afterChange(){
+    renderCalendar();
+    checkMilestones();
+  }
+
+  function checkMilestones(){
+    let grandDone = 0, grandTotal = 0;
+    CATEGORIES.forEach(cat => {
+      const { done, total } = catCounts(cat);
+      grandDone += done; grandTotal += total;
+
+      if(total > 0 && done === total){
+        const key = 'cat-' + cat.id + '-100';
+        if(!shownMilestones.includes(key)){
+          shownMilestones.push(key);
+          saveMilestones();
+          queueCelebration('✅', `${cat.title} — fully complete!`);
+        }
+      }
+    });
+
+    if(grandTotal === 0) return;
+    const pct = (grandDone / grandTotal) * 100;
+    for(let i = OVERALL_MILESTONES.length - 1; i >= 0; i--){
+      const ms = OVERALL_MILESTONES[i];
+      const key = 'overall-' + ms.pct;
+      if(pct >= ms.pct && !shownMilestones.includes(key)){
+        shownMilestones.push(key);
+        saveMilestones();
+        queueCelebration(ms.emoji, ms.text);
+        break;
+      }
+    }
+  }
+
+  let celebrationQueue = [];
+  let celebrationShowing = false;
+
+  function queueCelebration(emoji, text){
+    celebrationQueue.push({ emoji, text });
+    if(!celebrationShowing) showNextCelebration();
+  }
+
+  function showNextCelebration(){
+    if(celebrationQueue.length === 0){ celebrationShowing = false; return; }
+    celebrationShowing = true;
+    const { emoji, text } = celebrationQueue.shift();
+    document.getElementById('celebrateEmoji').textContent = emoji;
+    document.getElementById('celebrateText').textContent = text;
+    const overlay = document.getElementById('celebrateOverlay');
+    overlay.classList.add('show');
+    spawnConfetti();
+  }
+
+  function closeCelebration(){
+    document.getElementById('celebrateOverlay').classList.remove('show');
+    document.getElementById('confettiLayer').innerHTML = '';
+    setTimeout(showNextCelebration, 250);
+  }
+  document.getElementById('celebrateBtn').addEventListener('click', closeCelebration);
+  document.getElementById('celebrateOverlay').addEventListener('click', (e) => {
+    if(e.target.id === 'celebrateOverlay') closeCelebration();
+  });
+
+  function spawnConfetti(){
+    const layer = document.getElementById('confettiLayer');
+    layer.innerHTML = '';
+    const colors = ['#FF8FCB', '#B47AE0', '#FBF3FA', '#2ED47A'];
+    for(let i = 0; i < 28; i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random() * 100 + '%';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.animationDuration = (1.8 + Math.random() * 1.4) + 's';
+      piece.style.animationDelay = (Math.random() * 0.4) + 's';
+      layer.appendChild(piece);
+    }
+  }
+
+  async function initFirebase(){
+    if(!isConfigured){
+      setSyncStatus('offline');
+      render(); renderCalendar(); checkMilestones();
+      return;
+    }
+    setSyncStatus('connecting');
+    try{
+      const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+      const fs = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+      firestoreFns = fs;
+      const app = initializeApp(firebaseConfig);
+      db = fs.getFirestore(app);
+      docRef = fs.doc(db, 'launchpad', 'main-data');
+
+      fs.onSnapshot(docRef, (snap) => {
+        allData = snap.exists() ? snap.data() : {};
+        try{ localStorage.setItem(STORE_KEY, JSON.stringify(allData)); }catch(e){}
+        setSyncStatus('synced');
+        render(); renderCalendar(); checkMilestones();
+      }, (err) => {
+        console.error('Firestore listen failed', err);
+        setSyncStatus('offline');
+        render(); renderCalendar(); checkMilestones();
+      });
+    }catch(e){
+      console.error('Firebase init failed', e);
+      setSyncStatus('offline');
+      render(); renderCalendar(); checkMilestones();
+    }
+  }
+
+  initFirebase();
+</script>
+</body>
+</html>
