@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Packing Itinerary — Launchpad</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --deep: #2E0A3D;
+    --navy2: #6B2C91;
+    --teal: #A66AD1;
+    --violet: #A83FAE;
+    --gold: #FF8FCB;
+    --ink: #FBF3FA;
+    --ink-dim: rgba(251,243,250,0.72);
+    --ink-faint: rgba(251,243,250,0.46);
+    --glow: #2ED47A;
+    --danger: #F87171;
+    --card-bg: rgba(251,243,250,0.06);
+    --card-border: rgba(251,243,250,0.14);
+    --field-bg: rgba(251,243,250,0.06);
+  }
+  *{ box-sizing: border-box; margin:0; padding:0; }
+  html, body{ min-height: 100vh; font-family: 'Inter', sans-serif; color: var(--ink); overflow-x: hidden; }
+  body{
+    background: linear-gradient(125deg, var(--deep), var(--navy2) 30%, var(--violet) 68%, var(--teal) 100%);
+    background-size: 300% 300%;
+    animation: drift 26s ease-in-out infinite;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6vh 6vw 8vh;
+    position: relative;
+  }
+  @keyframes drift{ 0%{background-position:0% 20%;} 50%{background-position:100% 80%;} 100%{background-position:0% 20%;} }
+  .glow{
+    position: absolute; top: -10vw; left: -6vw; width: 44vw; height: 44vw; max-width: 600px; max-height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 45% 45%, rgba(180,122,224,0.45), rgba(255,143,203,0.18) 55%, transparent 75%);
+    filter: blur(2px); animation: pulse 8s ease-in-out infinite; pointer-events: none; z-index: 0;
+  }
+  @keyframes pulse{ 0%,100%{transform:scale(1);opacity:0.8;} 50%{transform:scale(1.08);opacity:1;} }
+
+  .page-grid{ width: 100%; max-width: 1120px; display: flex; flex-direction: column; gap: 28px; position: relative; z-index: 1; }
+  .main-col{ flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; }
+  .side-col{ width: 100%; }
+  @media (min-width: 960px){
+    .page-grid{ flex-direction: row; align-items: flex-start; }
+    .side-col{ width: 320px; flex: none; position: sticky; top: 24px; }
+  }
+
+  .back-link{
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--ink-dim);
+    text-decoration: none;
+    margin-bottom: 20px;
+    padding: 6px 12px;
+    border: 1px solid var(--card-border);
+    border-radius: 999px;
+    background: var(--card-bg);
+    transition: background 0.15s ease;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  .back-link:hover{ background: rgba(251,243,250,0.12); }
+
+  .eyebrow{
+    font-size: 0.78rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
+    font-weight: 600; margin-bottom: 10px; text-align: center;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+  .sync-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--ink-dim);
+    background: rgba(251,243,250,0.08);
+    border: 1px solid var(--card-border);
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+  }
+  .sync-dot{ width: 7px; height: 7px; border-radius: 50%; background: #FBBF24; }
+  .sync-pill.synced .sync-dot{ background: var(--glow); }
+  .title{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.6rem, 4vw, 2.3rem);
+    text-align: center;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.4);
+  }
+  .subtitle{
+    font-size: 0.9rem;
+    color: var(--ink-dim);
+    text-align: center;
+    max-width: 520px;
+    margin-bottom: 32px;
+    line-height: 1.55;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+  }
+
+  .overall{
+    width: 100%;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 18px;
+    padding: 20px 22px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .overall-ring svg{ transform: rotate(-90deg); flex: none; }
+  .ring-bg{ fill: none; stroke: rgba(251,243,250,0.15); stroke-width: 6; }
+  .ring-fg{ fill: none; stroke: var(--glow); stroke-width: 6; stroke-linecap: round; transition: stroke-dasharray 0.4s ease; }
+  .overall-text{ flex: 1; }
+  .overall-title{ font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 3px; }
+  .overall-sub{ font-size: 0.82rem; color: var(--ink-dim); }
+
+  .categories{ width: 100%; margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+  .cat{
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .cat-header{ display: flex; align-items: center; gap: 14px; padding: 16px 18px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .cat-index{
+    flex: 0 0 30px; height: 30px; border-radius: 9px; background: rgba(251,243,250,0.08);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.8rem; color: var(--ink-dim);
+  }
+  .cat-title-wrap{ flex: 1; min-width: 0; }
+  .cat-title{ font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1rem; }
+  .cat-progress-text{ font-size: 0.78rem; color: var(--ink-faint); margin-top: 2px; }
+  .cat-mini-bar{ width: 60px; height: 5px; border-radius: 3px; background: rgba(251,243,250,0.14); overflow: hidden; flex: none; }
+  .cat-mini-fill{ height: 100%; background: var(--glow); border-radius: 3px; transition: width 0.3s ease; }
+  .chevron{ flex: none; width: 20px; height: 20px; color: var(--ink-dim); transition: transform 0.25s ease; }
+  .cat.open .chevron{ transform: rotate(180deg); }
+  .cat-panel{ max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+  .cat.open .cat-panel{ max-height: 3000px; }
+  .cat-panel-inner{ padding: 0 18px 20px; }
+
+  .tip-box{
+    background: rgba(255,143,203,0.1);
+    border: 1px solid rgba(255,143,203,0.28);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 0.83rem;
+    line-height: 1.55;
+    color: var(--ink-dim);
+  }
+  .tip-box b{ color: var(--gold); font-weight: 700; }
+
+  .item{ display: flex; align-items: center; gap: 12px; padding: 10px 2px; border-bottom: 1px solid rgba(251,243,250,0.08); }
+  .item:last-child{ border-bottom: none; }
+  .box{
+    flex: 0 0 22px; width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid rgba(251,243,250,0.4);
+    display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .box svg{ width: 13px; height: 13px; opacity: 0; transform: scale(0.6); transition: all 0.2s ease; }
+  .item.checked .box{ background: var(--glow); border-color: var(--glow); }
+  .item.checked .box svg{ opacity: 1; transform: scale(1); }
+  .item.checked .label{ color: var(--ink-dim); }
+  .label{ font-size: 0.9rem; font-weight: 500; width: 34%; min-width: 100px; flex: 0 0 auto; }
+  .field{
+    flex: 1 1 auto; background: var(--field-bg); border: 1px solid var(--card-border); border-radius: 8px;
+    padding: 7px 10px; font-family: 'Inter', sans-serif; font-size: 0.82rem; color: var(--ink); outline: none;
+    min-width: 0; transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .field::placeholder{ color: var(--ink-faint); }
+  .field:focus{ border-color: var(--gold); background: rgba(251,243,250,0.1); }
+  .item-date{
+    flex: none;
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+    white-space: nowrap;
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: rgba(251,243,250,0.06);
+  }
+  .remove-btn{
+    flex: none; width: 22px; height: 22px; border-radius: 6px; border: none; background: transparent;
+    color: var(--ink-faint); cursor: pointer; font-size: 1rem; line-height: 1; transition: color 0.15s ease;
+  }
+  .remove-btn:hover{ color: var(--danger); }
+  .add-row{ display: flex; gap: 8px; margin-top: 14px; }
+  .add-input{
+    flex: 1; background: var(--field-bg); border: 1px dashed var(--card-border); border-radius: 8px;
+    padding: 8px 10px; font-family: 'Inter', sans-serif; font-size: 0.83rem; color: var(--ink); outline: none;
+  }
+  .add-input::placeholder{ color: var(--ink-faint); }
+  .add-input:focus{ border-color: var(--teal); border-style: solid; }
+  .add-btn{
+    flex: none; padding: 0 16px; border-radius: 8px; border: none; background: var(--teal); color: var(--deep);
+    font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: opacity 0.15s ease;
+  }
+  .add-btn:hover{ opacity: 0.88; }
+  .restore-link{ margin-top: 12px; font-size: 0.78rem; color: var(--ink-faint); text-decoration: underline; cursor: pointer; display: inline-block; }
+  .restore-link:hover{ color: var(--ink-dim); }
+
+  /* ---------- Progress calendar (sidebar) ---------- */
+  .cal-card{
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 18px;
+    padding: 20px 18px;
+  }
+  .cal-card-title{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 3px;
+  }
+  .cal-card-sub{
+    font-size: 0.76rem;
+    color: var(--ink-faint);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .cal-header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .cal-month{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 0.88rem;
+  }
+  .cal-nav{ display: flex; gap: 6px; }
+  .cal-btn{
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    border: 1px solid var(--card-border);
+    background: rgba(251,243,250,0.06);
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.15s ease;
+  }
+  .cal-btn:hover{ background: rgba(251,243,250,0.16); }
+
+  .cal-grid{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+  }
+  .cal-dow-grid{ margin-bottom: 4px; }
+  .cal-dow{
+    text-align: center;
+    font-size: 0.6rem;
+    letter-spacing: 0.03em;
+    color: var(--ink-faint);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+  .cal-day{
+    position: relative;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    color: var(--ink-dim);
+    background: rgba(251,243,250,0.04);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .cal-day:hover{ background: rgba(251,243,250,0.14); }
+  .cal-day.outside{ color: rgba(251,243,250,0.18); background: transparent; }
+  .cal-day.is-today{ box-shadow: inset 0 0 0 1.5px var(--gold); font-weight: 700; color: var(--ink); }
+  .cal-day.selected{ outline: 1.5px solid var(--teal); }
+  .cal-day.heat-1{ background: rgba(46,212,122,0.22); }
+  .cal-day.heat-2{ background: rgba(46,212,122,0.42); }
+  .cal-day.heat-3{ background: rgba(46,212,122,0.65); color: #073016; font-weight: 700; }
+  .cal-day-count{
+    position: absolute;
+    bottom: 2px;
+    font-size: 0.5rem;
+    font-weight: 700;
+    color: inherit;
+    opacity: 0.85;
+  }
+
+  .cal-detail{
+    margin-top: 14px;
+    border-top: 1px solid var(--card-border);
+    padding-top: 12px;
+    font-size: 0.78rem;
+    color: var(--ink-dim);
+    min-height: 20px;
+  }
+  .cal-detail-date{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+  .cal-detail-row{
+    display: flex;
+    justify-content: space-between;
+    padding: 3px 0;
+  }
+  .cal-detail-empty{ color: var(--ink-faint); }
+
+  .footer-note{ margin-top: 26px; text-align: center; font-size: 0.76rem; color: var(--ink-faint); line-height: 1.6; text-shadow: 0 2px 8px rgba(0,0,0,0.45); }
+
+  .weight-field{
+    flex: 0 0 60px;
+    width: 60px;
+    background: var(--field-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 7px 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    color: var(--ink);
+    outline: none;
+    text-align: right;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .weight-field::placeholder{ color: var(--ink-faint); }
+  .weight-field:focus{ border-color: var(--gold); background: rgba(251,243,250,0.1); }
+  .weight-field::-webkit-outer-spin-button, .weight-field::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0; }
+  .weight-check{
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.68rem;
+    color: var(--ink-faint);
+    cursor: pointer;
+    user-select: none;
+  }
+  .weight-check input{ accent-color: var(--glow); width: 14px; height: 14px; cursor: pointer; }
+
+  .weight-card{
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 18px;
+    padding: 20px 18px;
+    margin-top: 16px;
+  }
+  .weight-card-title{ font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 3px; }
+  .weight-card-sub{ font-size: 0.76rem; color: var(--ink-faint); margin-bottom: 14px; line-height: 1.5; }
+  .weight-total{ font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 1.6rem; color: var(--glow); margin-bottom: 12px; }
+  .weight-breakdown{ border-top: 1px solid var(--card-border); padding-top: 10px; }
+  .weight-row{ display: flex; justify-content: space-between; gap: 10px; font-size: 0.8rem; color: var(--ink-dim); padding: 4px 0; }
+  .weight-empty{ font-size: 0.78rem; color: var(--ink-faint); }
+
+  .add-category-row{
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    background: var(--card-bg);
+    border: 1px dashed var(--card-border);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .add-category-row .add-input{ border-style: dashed; }
+  .cat-remove-btn{
+    flex: none; width: 22px; height: 22px; border-radius: 6px; border: none; background: transparent;
+    color: var(--ink-faint); cursor: pointer; font-size: 1rem; line-height: 1; transition: color 0.15s ease;
+  }
+  .cat-remove-btn:hover{ color: var(--danger); }
+
+  @media (max-width: 480px){
+    body{ padding: 8vh 5vw 6vh; }
+    .item{ flex-wrap: wrap; }
+    .label{ width: calc(100% - 34px); }
+    .field{ flex-basis: 100%; margin-left: 34px; width: calc(100% - 34px); }
+    .weight-field{ margin-left: 34px; }
+    .weight-check{ margin-left: 8px; }
+    .remove-btn{ margin-left: auto; }
+  }
+  @media (prefers-reduced-motion: reduce){ body{ animation: none; } .glow{ animation: none; } }
+
+  /* Lock screen (shared PIN with main site) */
+  .lock-overlay{
+    position: fixed; inset: 0; z-index: 100;
+    background: linear-gradient(135deg, var(--deep), var(--navy2) 55%, #1B0526);
+    display: flex; align-items: center; justify-content: center; padding: 24px;
+  }
+  .lock-card{ width: 100%; max-width: 340px; text-align: center; }
+  .lock-eyebrow{ font-size: 0.78rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; margin-bottom: 10px; }
+  .lock-title{ font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem; margin-bottom: 6px; }
+  .lock-sub{ font-size: 0.85rem; color: var(--ink-dim); margin-bottom: 28px; }
+  .pin-inputs{ display: flex; gap: 8px; justify-content: center; margin-bottom: 18px; }
+  .pin-box{
+    width: 42px; height: 52px; border-radius: 10px; border: 1.5px solid var(--card-border);
+    background: rgba(251,243,250,0.07); color: var(--ink);
+    font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.3rem; font-weight: 700; text-align: center;
+    outline: none; transition: border-color 0.15s ease, transform 0.15s ease;
+  }
+  .pin-box:focus{ border-color: var(--gold); }
+  .pin-inputs.shake{ animation: shake 0.4s ease; }
+  @keyframes shake{ 0%,100%{transform:translateX(0);} 20%,60%{transform:translateX(-8px);} 40%,80%{transform:translateX(8px);} }
+  .lock-btn{
+    width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--gold); color: var(--deep);
+    font-weight: 700; font-size: 0.92rem; cursor: pointer; transition: opacity 0.15s ease;
+  }
+  .lock-btn:hover{ opacity: 0.9; }
+  .lock-error{ min-height: 20px; font-size: 0.8rem; color: var(--danger); margin-top: 12px; }
+  body.locked .page-grid, body.locked .glow{ display: none; }
+</style>
+</head>
+<body class="locked">
+
+<div class="lock-overlay" id="lockOverlay">
+  <div class="lock-card">
+    <div class="lock-eyebrow">Launchpad</div>
+    <div class="lock-title">Enter access code</div>
+    <div class="lock-sub">This tracker is private. Enter the 6-digit code to continue.</div>
+    <div class="pin-inputs" id="pinInputs">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+      <input class="pin-box" type="text" inputmode="numeric" maxlength="1" autocomplete="off">
+    </div>
+    <button class="lock-btn" id="lockUnlockBtn">Unlock</button>
+    <div class="lock-error" id="lockError"></div>
+  </div>
+</div>
+
+<div class="glow"></div>
+
+<div class="page-grid">
+  <div class="main-col">
+    <a class="back-link" href="index.html">&#8592; Back to Launchpad</a>
+    <div class="eyebrow">Packing Itinerary</div>
+    <div class="sync-pill" id="syncPill"><span class="sync-dot"></span><span id="syncText">Checking connection...</span></div>
+    <div class="title">Pack Smart, Travel Light</div>
+    <div class="subtitle">A category-wise packing list for your move to the US. Check items off, add notes, remove anything that doesn't apply, and add anything that does.</div>
+
+    <div class="overall">
+      <div class="overall-ring">
+        <svg width="56" height="56" viewBox="0 0 56 56">
+          <circle class="ring-bg" cx="28" cy="28" r="24"></circle>
+          <circle class="ring-fg" id="overallRing" cx="28" cy="28" r="24" stroke-dasharray="0 151"></circle>
+        </svg>
+      </div>
+      <div class="overall-text">
+        <div class="overall-title"><span id="overallDone">0</span> of <span id="overallTotal">0</span> items packed</div>
+        <div class="overall-sub">Across <span id="catCount">0</span> packing categories</div>
+      </div>
+    </div>
+
+    <div class="categories" id="categories"></div>
+
+    <div class="add-category-row">
+      <input class="add-input" id="newCatInput" type="text" placeholder="Add a new packing category (e.g. Sports Gear)...">
+      <button class="add-btn" id="newCatBtn">+ Add category</button>
+    </div>
+
+    <div class="footer-note">Customs and airline rules vary — always double-check restricted items and baggage limits with your specific airline before packing.<br>Everything you check or type is saved automatically on this device.</div>
+  </div>
+
+  <aside class="side-col">
+    <div class="cal-card">
+      <div class="cal-card-title">Packing calendar</div>
+      <div class="cal-card-sub">Days you packed items on. Tap a day for the breakdown.</div>
+      <div class="cal-header">
+        <div class="cal-month" id="calMonthLabel"></div>
+        <div class="cal-nav">
+          <button class="cal-btn" id="calPrevBtn" aria-label="Previous month">&#8249;</button>
+          <button class="cal-btn" id="calNextBtn" aria-label="Next month">&#8250;</button>
+        </div>
+      </div>
+      <div class="cal-grid cal-dow-grid" id="calDow"></div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-detail" id="calDetail"></div>
+    </div>
+
+    <div class="weight-card">
+      <div class="weight-card-title">Bag weight tracker</div>
+      <div class="weight-card-sub">Total of checked items with "Count" ticked, grouped by category.</div>
+      <div class="weight-total" id="weightTotal">0.00 kg</div>
+      <div class="weight-breakdown" id="weightBreakdown"></div>
+    </div>
+  </aside>
+</div>
+
+<script>
+  // ===================== ACCESS PIN (shared with main Launchpad site) =====================
+  const PIN_HASH = "070ab0cb88ffc0446d9c038f282b9c69e1a51a269f32d5dd012483142b4fec82";
+  const UNLOCK_KEY = "launchpad_unlocked_v1";
+
+  async function sha256Hex(str){
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  function unlockApp(){
+    document.body.classList.remove('locked');
+    const overlay = document.getElementById('lockOverlay');
+    if(overlay) overlay.style.display = 'none';
+  }
+  (function initLock(){
+    try{
+      if(localStorage.getItem(UNLOCK_KEY) === PIN_HASH){ unlockApp(); return; }
+    }catch(e){}
+    const boxes = Array.from(document.querySelectorAll('.pin-box'));
+    const pinInputs = document.getElementById('pinInputs');
+    const errorEl = document.getElementById('lockError');
+    const unlockBtn = document.getElementById('lockUnlockBtn');
+    boxes[0].focus();
+    boxes.forEach((box, i) => {
+      box.addEventListener('input', () => {
+        box.value = box.value.replace(/[^0-9]/g, '').slice(0, 1);
+        if(box.value && i < boxes.length - 1) boxes[i + 1].focus();
+        if(box.value && i === boxes.length - 1) attemptUnlock();
+      });
+      box.addEventListener('keydown', (e) => {
+        if(e.key === 'Backspace' && !box.value && i > 0) boxes[i - 1].focus();
+        if(e.key === 'Enter') attemptUnlock();
+      });
+      box.addEventListener('paste', (e) => {
+        const text = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
+        if(text.length){
+          e.preventDefault();
+          text.slice(0, 6).split('').forEach((ch, idx) => { if(boxes[idx]) boxes[idx].value = ch; });
+          const nextEmpty = boxes.findIndex(b => !b.value);
+          (nextEmpty === -1 ? boxes[5] : boxes[nextEmpty]).focus();
+          if(text.length >= 6) attemptUnlock();
+        }
+      });
+    });
+    unlockBtn.addEventListener('click', attemptUnlock);
+    async function attemptUnlock(){
+      const code = boxes.map(b => b.value).join('');
+      if(code.length !== 6){ showError('Enter all 6 digits.'); return; }
+      const hash = await sha256Hex(code);
+      if(hash === PIN_HASH){
+        try{ localStorage.setItem(UNLOCK_KEY, PIN_HASH); }catch(e){}
+        unlockApp();
+      } else {
+        showError('Incorrect code. Try again.');
+        pinInputs.classList.remove('shake');
+        void pinInputs.offsetWidth;
+        pinInputs.classList.add('shake');
+        boxes.forEach(b => b.value = '');
+        boxes[0].focus();
+      }
+    }
+    function showError(msg){ errorEl.textContent = msg; }
+  })();
+
+  // ===================== FIREBASE SYNC =====================
+  // Use the SAME config values as your main Launchpad page so both
+  // pages sync to the same Firebase project.
+  const firebaseConfig = {
+      apiKey: "AIzaSyDGSUql4dvz5YbwsQAfgMuCgnfA3ozdkv8",
+	  authDomain: "travelprgs.firebaseapp.com",
+	  projectId: "travelprgs",
+	  storageBucket: "travelprgs.firebasestorage.app",
+	  messagingSenderId: "144436969227",
+	  appId: "1:144436969227:web:082f8c79e33dc5cbcd2c0e"
+  };
+  const isConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY";
+  let db = null, docRef = null, firestoreFns = null, cloudSaveTimer = null;
+
+  const syncPill = document.getElementById('syncPill');
+  const syncText = document.getElementById('syncText');
+  function setSyncStatus(mode){
+    if(mode === 'synced'){ syncPill.classList.add('synced'); syncText.textContent = 'Synced across devices'; }
+    else if(mode === 'connecting'){ syncPill.classList.remove('synced'); syncText.textContent = 'Connecting...'; }
+    else { syncPill.classList.remove('synced'); syncText.textContent = 'Local only — add Firebase config to sync'; }
+  }
+
+  // ===================== PACKING CATEGORIES =====================
+  const CATEGORIES = [
+    {
+      id: "clothing",
+      title: "Clothing & Footwear",
+      tip: "Layer for the climate of your specific city, not just 'the US' generally — Boston winters and California winters are worlds apart. You can buy heavy winter wear locally too, so don't overpack bulky coats if budget/luggage space is tight.",
+      items: [
+        "Everyday outfits (5-7 sets)",
+        "Warm jacket / coat for winter",
+        "One formal outfit for events or interviews",
+        "Comfortable everyday walking shoes",
+        "Weatherproof / winter boots",
+        "Innerwear & socks (2 weeks supply)",
+        "Sleepwear",
+        "Umbrella or raincoat"
+      ]
+    },
+    {
+      id: "documents",
+      title: "Documents & Papers",
+      tip: "Carry all originals in your hand luggage, never checked baggage. Keep a second digital backup (scans in cloud storage or email to yourself) in case anything is lost or damaged in transit.",
+      items: [
+        "Passport (+ photocopies)",
+        "I-20 original + copies",
+        "Admission / offer letter",
+        "Visa-stamped passport page copy",
+        "SEVIS fee payment receipt",
+        "Financial documents / bank statements",
+        "Sealed academic transcripts",
+        "Test score reports",
+        "Passport-size photographs",
+        "Travel & health insurance documents",
+        "Emergency contact list",
+        "Birth certificate copy",
+        "Driving license & International Driving Permit"
+      ]
+    },
+    {
+      id: "electronics",
+      title: "Electronics",
+      tip: "The US uses Type A/B plugs at 120V — bring a universal adapter or US-specific one, and check your appliances are voltage-compatible or you'll need a converter too.",
+      items: [
+        "Laptop + charger",
+        "Universal / US plug adapter",
+        "Power bank",
+        "Headphones",
+        "Phone + charging cable",
+        "External hard drive / USB (document backup)",
+        "Multi-plug extension (US-compatible)"
+      ]
+    },
+    {
+      id: "toiletries-health",
+      title: "Toiletries & Health",
+      tip: "Pack a running supply of any prescription medication (in original packaging) along with a doctor's letter in English. Full-size toiletries are easy to buy locally, so travel-size is enough to get through the first week.",
+      items: [
+        "Travel-size toothbrush / toothpaste",
+        "Prescription medicines with doctor's note",
+        "Basic first-aid kit",
+        "Skincare / haircare essentials",
+        "Glasses / contact lenses + prescription copy",
+        "Face masks & hand sanitizer",
+        "Personal hygiene products"
+      ]
+    },
+    {
+      id: "study",
+      title: "Study Essentials",
+      tip: "Most textbooks are cheaper to buy or rent once you arrive (or available digitally) — don't overpack books. Prioritize a reliable backpack and any specialty stationery/tools your specific program needs.",
+      items: [
+        "Basic stationery (pens, notebook)",
+        "Calculator (if program-specific)",
+        "Laptop bag / backpack",
+        "Backup USB with important files"
+      ]
+    },
+    {
+      id: "home-comforts",
+      title: "Bedding & Home Comforts",
+      tip: "You'll likely buy bedding and kitchenware locally once you know your room size — pack only a few comfort items to get through the first couple of nights before you can shop.",
+      items: [
+        "Travel pillow",
+        "One bedsheet / pillow cover for the first nights",
+        "Reusable water bottle",
+        "A few home spices (check customs limits)",
+        "Basic travel cutlery / mug"
+      ]
+    },
+    {
+      id: "personal",
+      title: "Miscellaneous & Personal",
+      tip: "A few familiar comfort items go a long way in the first homesick weeks. Keep a lock and a visible ID tag on every checked bag.",
+      items: [
+        "Family photos / comfort items",
+        "Snacks from home (check customs limits)",
+        "Small gifts for hosts / roommates",
+        "Luggage lock",
+        "Luggage tags with contact info",
+        "Small amount of USD cash + cards"
+      ]
+    },
+    {
+      id: "customs",
+      title: "Customs & Airline Rules",
+      tip: "Rules change often and vary by airline — check your specific carrier's site within a week of departure, not months in advance. Never pack liquids over 100ml, sharp objects, or restricted food items in carry-on.",
+      items: [
+        "Checked baggage allowance confirmed",
+        "Carry-on liquid / restricted item rules reviewed",
+        "Prohibited items list reviewed for your airline",
+        "Weight limit per bag confirmed",
+        "Important documents kept in carry-on, not checked"
+      ]
+    }
+  ];
+
+  // ===================== STORAGE =====================
+  function pad(n){ return String(n).padStart(2, '0'); }
+  function keyOf(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
+  function todayKey(){ return keyOf(new Date()); }
+
+  const STORE_KEY = 'launchpad_packing_data_v1';
+  let allData = {};
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    allData = raw ? JSON.parse(raw) : {};
+  }catch(e){ allData = {}; }
+
+  function saveAll(){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(allData)); }catch(e){}
+    if(isConfigured && db){
+      clearTimeout(cloudSaveTimer);
+      cloudSaveTimer = setTimeout(async () => {
+        try{ await firestoreFns.setDoc(docRef, allData); }
+        catch(e){ console.error('Firestore save failed', e); setSyncStatus('offline'); }
+      }, 400);
+    }
+  }
+
+  function getCatData(cat){
+    if(!allData[cat.id]){ allData[cat.id] = { items: {}, custom: [] }; }
+    const cd = allData[cat.id];
+    if(!cd.items) cd.items = {};
+    if(!cd.custom) cd.custom = [];
+    cat.items.forEach((_, i) => {
+      if(!cd.items[i]) cd.items[i] = { c: false, t: '', deleted: false, d: null, w: '', wc: false };
+      if(cd.items[i].deleted === undefined) cd.items[i].deleted = false;
+      if(cd.items[i].d === undefined) cd.items[i].d = null;
+      if(cd.items[i].w === undefined) cd.items[i].w = '';
+      if(cd.items[i].wc === undefined) cd.items[i].wc = false;
+    });
+    cd.custom.forEach(entry => {
+      if(entry.w === undefined) entry.w = '';
+      if(entry.wc === undefined) entry.wc = false;
+    });
+    return cd;
+  }
+
+  function allCategories(){
+    return CATEGORIES.concat(Array.isArray(allData._customCategories) ? allData._customCategories : []);
+  }
+
+  function catWeight(cat){
+    const cd = getCatData(cat);
+    let weight = 0;
+    cat.items.forEach((_, i) => {
+      const e = cd.items[i];
+      if(!e.deleted && e.c && e.wc && e.w) weight += parseFloat(e.w) || 0;
+    });
+    cd.custom.forEach(e => {
+      if(e.c && e.wc && e.w) weight += parseFloat(e.w) || 0;
+    });
+    return weight;
+  }
+
+  function renderWeightCard(){
+    let grand = 0;
+    let rows = '';
+    allCategories().forEach(cat => {
+      const w = catWeight(cat);
+      if(w > 0){
+        grand += w;
+        rows += `<div class="weight-row"><span>${cat.title}</span><span>${w.toFixed(2)} kg</span></div>`;
+      }
+    });
+    document.getElementById('weightTotal').textContent = grand.toFixed(2) + ' kg';
+    document.getElementById('weightBreakdown').innerHTML = rows || `<div class="weight-empty">No weighed items checked yet.</div>`;
+  }
+
+  function addCategory(){
+    const input = document.getElementById('newCatInput');
+    const val = input.value.trim();
+    if(!val) return;
+    if(!Array.isArray(allData._customCategories)) allData._customCategories = [];
+    const id = 'custom-' + Date.now() + Math.random().toString(16).slice(2, 6);
+    allData._customCategories.push({ id, title: val, tip: 'Your own category — add items below and track their weight.', items: [], custom: true });
+    saveAll();
+    openState[id] = true;
+    input.value = '';
+    render();
+    renderCalendar();
+  }
+
+  function removeCustomCategory(id){
+    if(!confirm('Remove this category and all its items?')) return;
+    allData._customCategories = (allData._customCategories || []).filter(c => c.id !== id);
+    delete allData[id];
+    saveAll();
+    render();
+    renderCalendar();
+  }
+
+  function catCounts(cat){
+    const cd = getCatData(cat);
+    let total = 0, done = 0;
+    cat.items.forEach((_, i) => {
+      if(cd.items[i].deleted) return;
+      total++;
+      if(cd.items[i].c) done++;
+    });
+    cd.custom.forEach(c => { total++; if(c.c) done++; });
+    return { done, total };
+  }
+
+  function toggleEntry(entry){
+    entry.c = !entry.c;
+    entry.d = entry.c ? todayKey() : null;
+  }
+
+  function buildHistory(){
+    const history = {};
+    allCategories().forEach(cat => {
+      const cd = getCatData(cat);
+      cat.items.forEach((_, i) => {
+        const entry = cd.items[i];
+        if(entry.deleted || !entry.c || !entry.d) return;
+        if(!history[entry.d]) history[entry.d] = { total: 0, byCat: {} };
+        history[entry.d].total++;
+        history[entry.d].byCat[cat.id] = (history[entry.d].byCat[cat.id] || 0) + 1;
+      });
+      cd.custom.forEach(entry => {
+        if(!entry.c || !entry.d) return;
+        if(!history[entry.d]) history[entry.d] = { total: 0, byCat: {} };
+        history[entry.d].total++;
+        history[entry.d].byCat[cat.id] = (history[entry.d].byCat[cat.id] || 0) + 1;
+      });
+    });
+    return history;
+  }
+
+  const catsEl = document.getElementById('categories');
+  const openState = {};
+
+  document.getElementById('newCatBtn').addEventListener('click', addCategory);
+  document.getElementById('newCatInput').addEventListener('keydown', (e) => { if(e.key === 'Enter') addCategory(); });
+
+  function render(){
+    catsEl.innerHTML = '';
+    let grandDone = 0, grandTotal = 0;
+
+    allCategories().forEach((cat, ci) => {
+      const cd = getCatData(cat);
+      const { done, total } = catCounts(cat);
+      grandDone += done; grandTotal += total;
+
+      const catEl = document.createElement('div');
+      catEl.className = 'cat' + (openState[cat.id] ? ' open' : '');
+
+      const header = document.createElement('div');
+      header.className = 'cat-header';
+      header.innerHTML = `
+        <div class="cat-index">${String(ci + 1).padStart(2, '0')}</div>
+        <div class="cat-title-wrap">
+          <div class="cat-title">${cat.title}</div>
+          <div class="cat-progress-text">${done} of ${total} packed</div>
+        </div>
+        <div class="cat-mini-bar"><div class="cat-mini-fill" style="width:${total ? (done/total*100) : 0}%"></div></div>
+        ${cat.custom ? '<button class="cat-remove-btn" title="Remove category">&times;</button>' : ''}
+        <svg class="chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      `;
+      header.addEventListener('click', () => { openState[cat.id] = !openState[cat.id]; render(); });
+      if(cat.custom){
+        header.querySelector('.cat-remove-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          removeCustomCategory(cat.id);
+        });
+      }
+
+      const panel = document.createElement('div');
+      panel.className = 'cat-panel';
+      const inner = document.createElement('div');
+      inner.className = 'cat-panel-inner';
+      inner.innerHTML = `<div class="tip-box"><b>Keep in mind:</b> ${cat.tip}</div>`;
+
+      const list = document.createElement('div');
+      let anyDeleted = false;
+
+      cat.items.forEach((label, i) => {
+        const entry = cd.items[i];
+        if(entry.deleted){ anyDeleted = true; return; }
+        const row = buildItemRow(label, entry, () => {
+          toggleEntry(entry); saveAll(); render(); renderCalendar();
+        }, (val) => { entry.t = val; saveAll(); }, (val) => {
+          entry.w = val; saveAll(); renderWeightCard();
+        }, (checked) => {
+          entry.wc = checked; saveAll(); renderWeightCard();
+        }, () => {
+          entry.deleted = true; saveAll(); render();
+        });
+        list.appendChild(row);
+      });
+
+      cd.custom.forEach((entry) => {
+        const row = buildItemRow(entry.label, entry, () => {
+          toggleEntry(entry); saveAll(); render(); renderCalendar();
+        }, (val) => { entry.t = val; saveAll(); }, (val) => {
+          entry.w = val; saveAll(); renderWeightCard();
+        }, (checked) => {
+          entry.wc = checked; saveAll(); renderWeightCard();
+        }, () => {
+          cd.custom = cd.custom.filter(x => x.id !== entry.id);
+          saveAll(); render();
+        });
+        list.appendChild(row);
+      });
+
+      inner.appendChild(list);
+
+      if(anyDeleted){
+        const restore = document.createElement('div');
+        restore.className = 'restore-link';
+        restore.textContent = 'Restore removed default items';
+        restore.addEventListener('click', () => {
+          cat.items.forEach((_, i) => { cd.items[i].deleted = false; });
+          saveAll(); render();
+        });
+        inner.appendChild(restore);
+      }
+
+      const addRow = document.createElement('div');
+      addRow.className = 'add-row';
+      addRow.innerHTML = `
+        <input class="add-input" type="text" placeholder="Add your own packing item...">
+        <button class="add-btn">Add</button>
+      `;
+      const addInput = addRow.querySelector('.add-input');
+      const addBtn = addRow.querySelector('.add-btn');
+      function addCustom(){
+        const val = addInput.value.trim();
+        if(!val) return;
+        cd.custom.push({ id: 'c' + Date.now() + Math.random().toString(16).slice(2), label: val, c: false, t: '' });
+        saveAll();
+        openState[cat.id] = true;
+        render();
+      }
+      addBtn.addEventListener('click', addCustom);
+      addInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') addCustom(); });
+      inner.appendChild(addRow);
+
+      panel.appendChild(inner);
+      catEl.appendChild(header);
+      catEl.appendChild(panel);
+      catsEl.appendChild(catEl);
+    });
+
+    document.getElementById('overallDone').textContent = grandDone;
+    document.getElementById('overallTotal').textContent = grandTotal;
+    document.getElementById('catCount').textContent = allCategories().length;
+    const circumference = 2 * Math.PI * 24;
+    const frac = grandTotal ? grandDone / grandTotal : 0;
+    document.getElementById('overallRing').setAttribute('stroke-dasharray', `${(circumference * frac).toFixed(1)} ${circumference.toFixed(1)}`);
+    renderWeightCard();
+  }
+
+  function formatShortDate(dateKeyStr){
+    const [y, m, d] = dateKeyStr.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  }
+
+  function buildItemRow(label, entry, onToggle, onNote, onWeightChange, onWeightToggle, onRemove){
+    const row = document.createElement('div');
+    row.className = 'item' + (entry.c ? ' checked' : '');
+    row.innerHTML = `
+      <span class="box" role="checkbox" aria-checked="${entry.c}">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 12.5L9.5 18L20 6" stroke="#2E0A3D" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="label">${label}</span>
+      <input class="field" type="text" placeholder="Add note...">
+      <input class="weight-field" type="number" min="0" step="0.01" placeholder="kg">
+      <label class="weight-check" title="Count this item's weight toward your bag total">
+        <input type="checkbox" class="weight-toggle">
+        <span>Count</span>
+      </label>
+      ${entry.c && entry.d ? `<span class="item-date">${formatShortDate(entry.d)}</span>` : ''}
+      <button class="remove-btn" title="Remove">&times;</button>
+    `;
+    row.querySelector('.field').value = entry.t;
+    row.querySelector('.weight-field').value = entry.w || '';
+    row.querySelector('.weight-toggle').checked = !!entry.wc;
+    row.querySelector('.box').addEventListener('click', onToggle);
+    row.querySelector('.field').addEventListener('input', (e) => onNote(e.target.value));
+    row.querySelector('.weight-field').addEventListener('input', (e) => onWeightChange(e.target.value));
+    row.querySelector('.weight-toggle').addEventListener('change', (e) => onWeightToggle(e.target.checked));
+    row.querySelector('.remove-btn').addEventListener('click', onRemove);
+    return row;
+  }
+
+  // ===================== PROGRESS CALENDAR =====================
+  const nowForCal = new Date();
+  let calViewYear = nowForCal.getFullYear();
+  let calViewMonth = nowForCal.getMonth();
+  let calSelectedKey = null;
+
+  const CAL_DOW = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const CAL_MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+  const calDowEl = document.getElementById('calDow');
+  const calGridEl = document.getElementById('calGrid');
+  const calMonthLabel = document.getElementById('calMonthLabel');
+  const calDetailEl = document.getElementById('calDetail');
+
+  CAL_DOW.forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'cal-dow';
+    el.textContent = d;
+    calDowEl.appendChild(el);
+  });
+
+  function catTitleById(id){
+    const cat = allCategories().find(c => c.id === id);
+    return cat ? cat.title : id;
+  }
+
+  function renderCalendar(){
+    const history = buildHistory();
+    calMonthLabel.textContent = `${CAL_MONTHS[calViewMonth]} ${calViewYear}`;
+    calGridEl.innerHTML = '';
+
+    const firstOfMonth = new Date(calViewYear, calViewMonth, 1);
+    const startOffset = firstOfMonth.getDay();
+    const daysInMonth = new Date(calViewYear, calViewMonth + 1, 0).getDate();
+    const daysInPrevMonth = new Date(calViewYear, calViewMonth, 0).getDate();
+
+    const cells = [];
+    for(let i = startOffset - 1; i >= 0; i--){
+      cells.push({ day: daysInPrevMonth - i, outside: true, y: calViewMonth === 0 ? calViewYear - 1 : calViewYear, m: calViewMonth === 0 ? 11 : calViewMonth - 1 });
+    }
+    for(let d = 1; d <= daysInMonth; d++){
+      cells.push({ day: d, outside: false, y: calViewYear, m: calViewMonth });
+    }
+    while(cells.length % 7 !== 0){
+      const last = cells[cells.length - 1];
+      const nd = new Date(last.y, last.m, last.day + 1);
+      cells.push({ day: nd.getDate(), outside: true, y: nd.getFullYear(), m: nd.getMonth() });
+    }
+
+    cells.forEach(cell => {
+      const cellDate = new Date(cell.y, cell.m, cell.day);
+      const cellKey = keyOf(cellDate);
+      const rec = history[cellKey];
+      const count = rec ? rec.total : 0;
+
+      const el = document.createElement('div');
+      let cls = 'cal-day' + (cell.outside ? ' outside' : '');
+      if(cellKey === todayKey()) cls += ' is-today';
+      if(cellKey === calSelectedKey) cls += ' selected';
+      if(count >= 1 && count <= 2) cls += ' heat-1';
+      else if(count >= 3 && count <= 5) cls += ' heat-2';
+      else if(count > 5) cls += ' heat-3';
+      el.className = cls;
+      el.innerHTML = `${cell.day}` + (count > 0 ? `<span class="cal-day-count">${count}</span>` : '');
+      el.addEventListener('click', () => {
+        calSelectedKey = cellKey;
+        if(cell.outside){ calViewYear = cell.y; calViewMonth = cell.m; }
+        renderCalendar();
+      });
+      calGridEl.appendChild(el);
+    });
+
+    renderCalDetail(history);
+  }
+
+  function renderCalDetail(history){
+    if(!calSelectedKey){
+      calDetailEl.innerHTML = `<div class="cal-detail-empty">Tap any day to see what you packed.</div>`;
+      return;
+    }
+    const rec = history[calSelectedKey];
+    const [y, m, d] = calSelectedKey.split('-').map(Number);
+    const label = new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
+
+    if(!rec || rec.total === 0){
+      calDetailEl.innerHTML = `<div class="cal-detail-date">${label}</div><div class="cal-detail-empty">No items packed this day.</div>`;
+      return;
+    }
+
+    let rows = `<div class="cal-detail-date">${label} — ${rec.total} packed</div>`;
+    Object.keys(rec.byCat).forEach(catId => {
+      rows += `<div class="cal-detail-row"><span>${catTitleById(catId)}</span><span>${rec.byCat[catId]}</span></div>`;
+    });
+    calDetailEl.innerHTML = rows;
+  }
+
+  document.getElementById('calPrevBtn').addEventListener('click', () => {
+    calViewMonth--;
+    if(calViewMonth < 0){ calViewMonth = 11; calViewYear--; }
+    renderCalendar();
+  });
+  document.getElementById('calNextBtn').addEventListener('click', () => {
+    calViewMonth++;
+    if(calViewMonth > 11){ calViewMonth = 0; calViewYear++; }
+    renderCalendar();
+  });
+
+  async function initFirebase(){
+    if(!isConfigured){
+      setSyncStatus('offline');
+      render(); renderCalendar();
+      return;
+    }
+    setSyncStatus('connecting');
+    try{
+      const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js');
+      const fs = await import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js');
+      firestoreFns = fs;
+      const app = initializeApp(firebaseConfig);
+      db = fs.getFirestore(app);
+      docRef = fs.doc(db, 'launchpad', 'packing-data');
+
+      fs.onSnapshot(docRef, (snap) => {
+        allData = snap.exists() ? snap.data() : {};
+        try{ localStorage.setItem(STORE_KEY, JSON.stringify(allData)); }catch(e){}
+        setSyncStatus('synced');
+        render(); renderCalendar();
+      }, (err) => {
+        console.error('Firestore listen failed', err);
+        setSyncStatus('offline');
+        render(); renderCalendar();
+      });
+    }catch(e){
+      console.error('Firebase init failed', e);
+      setSyncStatus('offline');
+      render(); renderCalendar();
+    }
+  }
+
+  initFirebase();
+</script>
+</body>
+</html>
