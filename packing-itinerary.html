@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Packing Itinerary — Launchpad</title>
+<title>Launchpad — USA Masters Prep</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -23,8 +23,16 @@
     --card-border: rgba(251,243,250,0.14);
     --field-bg: rgba(251,243,250,0.06);
   }
+
   *{ box-sizing: border-box; margin:0; padding:0; }
-  html, body{ min-height: 100vh; font-family: 'Inter', sans-serif; color: var(--ink); overflow-x: hidden; }
+
+  html, body{
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
   body{
     background: linear-gradient(125deg, var(--deep), var(--navy2) 30%, var(--violet) 68%, var(--teal) 100%);
     background-size: 300% 300%;
@@ -36,46 +44,89 @@
     padding: 6vh 6vw 8vh;
     position: relative;
   }
-  @keyframes drift{ 0%{background-position:0% 20%;} 50%{background-position:100% 80%;} 100%{background-position:0% 20%;} }
+
+  @keyframes drift{
+    0%   { background-position: 0% 20%; }
+    50%  { background-position: 100% 80%; }
+    100% { background-position: 0% 20%; }
+  }
+
   .glow{
-    position: absolute; top: -10vw; left: -6vw; width: 44vw; height: 44vw; max-width: 600px; max-height: 600px;
+    position: absolute;
+    top: -10vw;
+    left: -6vw;
+    width: 44vw;
+    height: 44vw;
+    max-width: 600px;
+    max-height: 600px;
     border-radius: 50%;
     background: radial-gradient(circle at 45% 45%, rgba(180,122,224,0.45), rgba(255,143,203,0.18) 55%, transparent 75%);
-    filter: blur(2px); animation: pulse 8s ease-in-out infinite; pointer-events: none; z-index: 0;
+    filter: blur(2px);
+    animation: pulse 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
   }
-  @keyframes pulse{ 0%,100%{transform:scale(1);opacity:0.8;} 50%{transform:scale(1.08);opacity:1;} }
+  @keyframes pulse{
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50%      { transform: scale(1.08); opacity: 1; }
+  }
 
-  .page-grid{ width: 100%; max-width: 1120px; display: flex; flex-direction: column; gap: 28px; position: relative; z-index: 1; }
-  .main-col{ flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; }
+  .flight-path{
+    position: absolute;
+    top: 4vh;
+    right: 4vw;
+    width: 220px;
+    height: 120px;
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .plane{
+    offset-path: path('M10,100 C60,10 160,10 210,90');
+    offset-rotate: auto;
+    animation: fly 9s linear infinite;
+  }
+  @keyframes fly{
+    0%   { offset-distance: 0%; opacity: 0; }
+    8%   { opacity: 1; }
+    92%  { opacity: 1; }
+    100% { offset-distance: 100%; opacity: 0; }
+  }
+
+  .page-grid{
+    width: 100%;
+    max-width: 1120px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    position: relative;
+    z-index: 1;
+  }
+  .main-col{
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   .side-col{ width: 100%; }
+
   @media (min-width: 960px){
     .page-grid{ flex-direction: row; align-items: flex-start; }
     .side-col{ width: 320px; flex: none; position: sticky; top: 24px; }
   }
 
-  .back-link{
-    align-self: flex-start;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.82rem;
-    color: var(--ink-dim);
-    text-decoration: none;
-    margin-bottom: 20px;
-    padding: 6px 12px;
-    border: 1px solid var(--card-border);
-    border-radius: 999px;
-    background: var(--card-bg);
-    transition: background 0.15s ease;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
-  }
-  .back-link:hover{ background: rgba(251,243,250,0.12); }
-
   .eyebrow{
-    font-size: 0.78rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint);
-    font-weight: 600; margin-bottom: 10px; text-align: center;
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    margin-bottom: 14px;
+    text-align: center;
     text-shadow: 0 2px 10px rgba(0,0,0,0.5);
   }
+
   .sync-pill{
     display: inline-flex;
     align-items: center;
@@ -86,29 +137,64 @@
     border: 1px solid var(--card-border);
     padding: 5px 12px;
     border-radius: 999px;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
   }
   .sync-dot{ width: 7px; height: 7px; border-radius: 50%; background: #FBBF24; }
   .sync-pill.synced .sync-dot{ background: var(--glow); }
-  .title{
-    font-family: 'Bricolage Grotesque', sans-serif;
-    font-weight: 800;
-    font-size: clamp(1.6rem, 4vw, 2.3rem);
-    text-align: center;
-    margin-bottom: 8px;
-    text-shadow: 0 2px 16px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.4);
-  }
-  .subtitle{
-    font-size: 0.9rem;
+
+  .date{
+    font-size: 0.92rem;
     color: var(--ink-dim);
+    margin-bottom: 36px;
     text-align: center;
-    max-width: 520px;
-    margin-bottom: 32px;
-    line-height: 1.55;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
   }
 
+  .sync-pill{
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--ink-dim);
+    background: rgba(251,243,250,0.08);
+    border: 1px solid var(--card-border);
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+  }
+  .sync-dot{ width: 7px; height: 7px; border-radius: 50%; background: #FBBF24; }
+  .sync-pill.synced .sync-dot{ background: var(--glow); }
+
+  .quote-mark{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 800;
+    font-size: 2.1rem;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.45);
+  }
+  .quote{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 3.8vw, 2.4rem);
+    line-height: 1.2;
+    text-align: center;
+    letter-spacing: -0.01em;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.55), 0 1px 3px rgba(0,0,0,0.4);
+    max-width: 680px;
+  }
+  .quote-author{
+    margin-top: 18px;
+    font-size: 0.85rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.05em;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+
+  /* overall progress */
   .overall{
+    margin-top: 40px;
     width: 100%;
     background: var(--card-bg);
     border: 1px solid var(--card-border);
@@ -127,7 +213,9 @@
   .overall-title{ font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: 3px; }
   .overall-sub{ font-size: 0.82rem; color: var(--ink-dim); }
 
+  /* category accordion */
   .categories{ width: 100%; margin-top: 20px; display: flex; flex-direction: column; gap: 12px; }
+
   .cat{
     background: var(--card-bg);
     border: 1px solid var(--card-border);
@@ -136,21 +224,69 @@
     border-radius: 16px;
     overflow: hidden;
   }
-  .cat-header{ display: flex; align-items: center; gap: 14px; padding: 16px 18px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+  .cat-header{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 18px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
   .cat-index{
-    flex: 0 0 30px; height: 30px; border-radius: 9px; background: rgba(251,243,250,0.08);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.8rem; color: var(--ink-dim);
+    flex: 0 0 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: rgba(251,243,250,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--ink-dim);
   }
   .cat-title-wrap{ flex: 1; min-width: 0; }
   .cat-title{ font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1rem; }
   .cat-progress-text{ font-size: 0.78rem; color: var(--ink-faint); margin-top: 2px; }
-  .cat-mini-bar{ width: 60px; height: 5px; border-radius: 3px; background: rgba(251,243,250,0.14); overflow: hidden; flex: none; }
+  .cat-mini-bar{
+    width: 60px;
+    height: 5px;
+    border-radius: 3px;
+    background: rgba(251,243,250,0.14);
+    overflow: hidden;
+    flex: none;
+  }
   .cat-mini-fill{ height: 100%; background: var(--glow); border-radius: 3px; transition: width 0.3s ease; }
-  .chevron{ flex: none; width: 20px; height: 20px; color: var(--ink-dim); transition: transform 0.25s ease; }
+  .chevron{
+    flex: none;
+    width: 20px;
+    height: 20px;
+    color: var(--ink-dim);
+    transition: transform 0.25s ease;
+  }
   .cat.open .chevron{ transform: rotate(180deg); }
-  .cat-panel{ max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+
+  .cat-rename-btn{
+    flex: none; width: 22px; height: 22px; border-radius: 6px; border: none; background: transparent;
+    color: var(--ink-faint); cursor: pointer; font-size: 0.85rem; line-height: 1; transition: color 0.15s ease;
+  }
+  .cat-rename-btn:hover{ color: var(--gold); }
+
+  .cat.hide-weight .weight-field, .cat.hide-weight .weight-check{ display: none !important; }
+  .cat-weight-toggle{
+    display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--ink-dim);
+    margin-bottom: 16px; cursor: pointer; user-select: none;
+  }
+  .cat-weight-toggle input{ accent-color: var(--glow); width: 15px; height: 15px; cursor: pointer; }
+
+  .cat-panel{
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+  }
   .cat.open .cat-panel{ max-height: 3000px; }
+
   .cat-panel-inner{ padding: 0 18px 20px; }
 
   .tip-box{
@@ -165,25 +301,57 @@
   }
   .tip-box b{ color: var(--gold); font-weight: 700; }
 
-  .item{ display: flex; align-items: center; gap: 12px; padding: 10px 2px; border-bottom: 1px solid rgba(251,243,250,0.08); }
+  .item{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 2px;
+    border-bottom: 1px solid rgba(251,243,250,0.08);
+  }
   .item:last-child{ border-bottom: none; }
+
   .box{
-    flex: 0 0 22px; width: 22px; height: 22px; border-radius: 6px; border: 1.5px solid rgba(251,243,250,0.4);
-    display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease;
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 1.5px solid rgba(251,243,250,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
     -webkit-tap-highlight-color: transparent;
   }
   .box svg{ width: 13px; height: 13px; opacity: 0; transform: scale(0.6); transition: all 0.2s ease; }
   .item.checked .box{ background: var(--glow); border-color: var(--glow); }
   .item.checked .box svg{ opacity: 1; transform: scale(1); }
   .item.checked .label{ color: var(--ink-dim); }
-  .label{ font-size: 0.9rem; font-weight: 500; width: 34%; min-width: 100px; flex: 0 0 auto; }
+
+  .label{
+    font-size: 0.9rem;
+    font-weight: 500;
+    width: 34%;
+    min-width: 100px;
+    flex: 0 0 auto;
+  }
+
   .field{
-    flex: 1 1 auto; background: var(--field-bg); border: 1px solid var(--card-border); border-radius: 8px;
-    padding: 7px 10px; font-family: 'Inter', sans-serif; font-size: 0.82rem; color: var(--ink); outline: none;
-    min-width: 0; transition: border-color 0.15s ease, background 0.15s ease;
+    flex: 1 1 auto;
+    background: var(--field-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    color: var(--ink);
+    outline: none;
+    min-width: 0;
+    transition: border-color 0.15s ease, background 0.15s ease;
   }
   .field::placeholder{ color: var(--ink-faint); }
   .field:focus{ border-color: var(--gold); background: rgba(251,243,250,0.1); }
+
   .item-date{
     flex: none;
     font-size: 0.68rem;
@@ -193,25 +361,90 @@
     border-radius: 999px;
     background: rgba(251,243,250,0.06);
   }
+
   .remove-btn{
-    flex: none; width: 22px; height: 22px; border-radius: 6px; border: none; background: transparent;
-    color: var(--ink-faint); cursor: pointer; font-size: 1rem; line-height: 1; transition: color 0.15s ease;
+    flex: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--ink-faint);
+    cursor: pointer;
+    font-size: 1rem;
+    line-height: 1;
+    transition: color 0.15s ease;
   }
   .remove-btn:hover{ color: var(--danger); }
-  .add-row{ display: flex; gap: 8px; margin-top: 14px; }
+
+  .add-row{
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+  }
   .add-input{
-    flex: 1; background: var(--field-bg); border: 1px dashed var(--card-border); border-radius: 8px;
-    padding: 8px 10px; font-family: 'Inter', sans-serif; font-size: 0.83rem; color: var(--ink); outline: none;
+    flex: 1;
+    background: var(--field-bg);
+    border: 1px dashed var(--card-border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.83rem;
+    color: var(--ink);
+    outline: none;
   }
   .add-input::placeholder{ color: var(--ink-faint); }
   .add-input:focus{ border-color: var(--teal); border-style: solid; }
   .add-btn{
-    flex: none; padding: 0 16px; border-radius: 8px; border: none; background: var(--teal); color: var(--deep);
-    font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: opacity 0.15s ease;
+    flex: none;
+    padding: 0 16px;
+    border-radius: 8px;
+    border: none;
+    background: var(--teal);
+    color: var(--deep);
+    font-weight: 700;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
   }
   .add-btn:hover{ opacity: 0.88; }
-  .restore-link{ margin-top: 12px; font-size: 0.78rem; color: var(--ink-faint); text-decoration: underline; cursor: pointer; display: inline-block; }
+
+  .itinerary-link{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(180,122,224,0.12);
+    border: 1px solid rgba(180,122,224,0.35);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+  .itinerary-link:hover{ background: rgba(180,122,224,0.2); }
+  .itinerary-link span{ color: var(--teal); }
+
+  .restore-link{
+    margin-top: 12px;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    text-decoration: underline;
+    cursor: pointer;
+    display: inline-block;
+  }
   .restore-link:hover{ color: var(--ink-dim); }
+
+  .footer-note{
+    margin-top: 26px;
+    text-align: center;
+    font-size: 0.76rem;
+    color: var(--ink-faint);
+    line-height: 1.6;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.45);
+  }
 
   /* ---------- Progress calendar (sidebar) ---------- */
   .cal-card{
@@ -327,7 +560,78 @@
   }
   .cal-detail-empty{ color: var(--ink-faint); }
 
-  .footer-note{ margin-top: 26px; text-align: center; font-size: 0.76rem; color: var(--ink-faint); line-height: 1.6; text-shadow: 0 2px 8px rgba(0,0,0,0.45); }
+  /* ---------- Milestone celebration ---------- */
+  .celebrate-overlay{
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20,10,6,0.6);
+    padding: 24px;
+  }
+  .celebrate-overlay.show{ display: flex; }
+  .celebrate-card{
+    position: relative;
+    z-index: 2;
+    background: var(--navy2);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 34px 28px;
+    text-align: center;
+    max-width: 320px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    animation: pop 0.35s ease;
+  }
+  @keyframes pop{
+    0%{ transform: scale(0.85); opacity: 0; }
+    100%{ transform: scale(1); opacity: 1; }
+  }
+  .celebrate-emoji{
+    font-size: 3rem;
+    margin-bottom: 14px;
+    animation: bounce 1.1s ease infinite;
+  }
+  @keyframes bounce{
+    0%, 100%{ transform: translateY(0); }
+    50%{ transform: translateY(-10px); }
+  }
+  .celebrate-text{
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    line-height: 1.4;
+    margin-bottom: 20px;
+  }
+  .celebrate-btn{
+    padding: 10px 22px;
+    border-radius: 10px;
+    border: none;
+    background: var(--gold);
+    color: var(--deep);
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .confetti-layer{
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .confetti-piece{
+    position: absolute;
+    top: -10px;
+    width: 8px;
+    height: 14px;
+    opacity: 0.9;
+    animation: confetti-fall linear forwards;
+  }
+  @keyframes confetti-fall{
+    0%{ transform: translateY(0) rotate(0deg); opacity: 1; }
+    100%{ transform: translateY(110vh) rotate(540deg); opacity: 0.3; }
+  }
 
   .weight-field{
     flex: 0 0 60px;
@@ -374,35 +678,6 @@
   .weight-row{ display: flex; justify-content: space-between; gap: 10px; font-size: 0.8rem; color: var(--ink-dim); padding: 4px 0; }
   .weight-empty{ font-size: 0.78rem; color: var(--ink-faint); }
 
-  .add-category-row{
-    width: 100%;
-    display: flex;
-    gap: 8px;
-    margin-top: 14px;
-    background: var(--card-bg);
-    border: 1px dashed var(--card-border);
-    border-radius: 14px;
-    padding: 14px;
-  }
-  .add-category-row .add-input{ border-style: dashed; }
-  .cat-remove-btn{
-    flex: none; width: 22px; height: 22px; border-radius: 6px; border: none; background: transparent;
-    color: var(--ink-faint); cursor: pointer; font-size: 1rem; line-height: 1; transition: color 0.15s ease;
-  }
-  .cat-remove-btn:hover{ color: var(--danger); }
-  .cat-rename-btn{
-    flex: none; width: 22px; height: 22px; border-radius: 6px; border: none; background: transparent;
-    color: var(--ink-faint); cursor: pointer; font-size: 0.85rem; line-height: 1; transition: color 0.15s ease;
-  }
-  .cat-rename-btn:hover{ color: var(--gold); }
-
-  .cat.hide-weight .weight-field, .cat.hide-weight .weight-check{ display: none !important; }
-  .cat-weight-toggle{
-    display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--ink-dim);
-    margin-bottom: 16px; cursor: pointer; user-select: none;
-  }
-  .cat-weight-toggle input{ accent-color: var(--glow); width: 15px; height: 15px; cursor: pointer; }
-
   @media (max-width: 480px){
     body{ padding: 8vh 5vw 6vh; }
     .item{ flex-wrap: wrap; }
@@ -412,35 +687,74 @@
     .weight-check{ margin-left: 8px; }
     .remove-btn{ margin-left: auto; }
   }
-  @media (prefers-reduced-motion: reduce){ body{ animation: none; } .glow{ animation: none; } }
 
-  /* Lock screen (shared PIN with main site) */
+  @media (prefers-reduced-motion: reduce){
+    body{ animation: none; }
+    .glow{ animation: none; }
+    .plane{ animation: none; opacity: 0; }
+    .celebrate-emoji{ animation: none; }
+    .confetti-piece{ animation: none; display: none; }
+  }
+
+  /* ---------- Lock screen ---------- */
   .lock-overlay{
-    position: fixed; inset: 0; z-index: 100;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
     background: linear-gradient(135deg, var(--deep), var(--navy2) 55%, #1B0526);
-    display: flex; align-items: center; justify-content: center; padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
   }
   .lock-card{ width: 100%; max-width: 340px; text-align: center; }
-  .lock-eyebrow{ font-size: 0.78rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; margin-bottom: 10px; }
+  .lock-eyebrow{
+    font-size: 0.78rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
   .lock-title{ font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem; margin-bottom: 6px; }
   .lock-sub{ font-size: 0.85rem; color: var(--ink-dim); margin-bottom: 28px; }
   .pin-inputs{ display: flex; gap: 8px; justify-content: center; margin-bottom: 18px; }
   .pin-box{
-    width: 42px; height: 52px; border-radius: 10px; border: 1.5px solid var(--card-border);
-    background: rgba(251,243,250,0.07); color: var(--ink);
-    font-family: 'Bricolage Grotesque', sans-serif; font-size: 1.3rem; font-weight: 700; text-align: center;
-    outline: none; transition: border-color 0.15s ease, transform 0.15s ease;
+    width: 42px;
+    height: 52px;
+    border-radius: 10px;
+    border: 1.5px solid var(--card-border);
+    background: rgba(251,243,250,0.07);
+    color: var(--ink);
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-align: center;
+    outline: none;
+    transition: border-color 0.15s ease, transform 0.15s ease;
   }
   .pin-box:focus{ border-color: var(--gold); }
   .pin-inputs.shake{ animation: shake 0.4s ease; }
-  @keyframes shake{ 0%,100%{transform:translateX(0);} 20%,60%{transform:translateX(-8px);} 40%,80%{transform:translateX(8px);} }
+  @keyframes shake{
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-8px); }
+    40%, 80% { transform: translateX(8px); }
+  }
   .lock-btn{
-    width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--gold); color: var(--deep);
-    font-weight: 700; font-size: 0.92rem; cursor: pointer; transition: opacity 0.15s ease;
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: var(--gold);
+    color: var(--deep);
+    font-weight: 700;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
   }
   .lock-btn:hover{ opacity: 0.9; }
   .lock-error{ min-height: 20px; font-size: 0.8rem; color: var(--danger); margin-top: 12px; }
-  body.locked .page-grid, body.locked .glow{ display: none; }
+  body.locked .page-grid, body.locked .glow, body.locked .flight-path{ display: none; }
 </style>
 </head>
 <body class="locked">
@@ -464,14 +778,29 @@
 </div>
 
 <div class="glow"></div>
+<svg class="flight-path" viewBox="0 0 220 120" xmlns="http://www.w3.org/2000/svg">
+  <path d="M10,100 C60,10 160,10 210,90" fill="none" stroke="rgba(251,243,250,0.35)" stroke-width="1.5" stroke-dasharray="4 6"/>
+  <text class="plane" x="0" y="0" font-size="16">&#9992;</text>
+</svg>
+
+<div class="celebrate-overlay" id="celebrateOverlay">
+  <div class="celebrate-card">
+    <div class="celebrate-emoji" id="celebrateEmoji">🎉</div>
+    <div class="celebrate-text" id="celebrateText"></div>
+    <button class="celebrate-btn" id="celebrateBtn">Keep going</button>
+  </div>
+  <div class="confetti-layer" id="confettiLayer"></div>
+</div>
 
 <div class="page-grid">
   <div class="main-col">
-    <a class="back-link" href="index.html">&#8592; Back to Launchpad</a>
-    <div class="eyebrow">Packing Itinerary</div>
+    <div class="eyebrow">Launchpad — USA Masters Prep</div>
     <div class="sync-pill" id="syncPill"><span class="sync-dot"></span><span id="syncText">Checking connection...</span></div>
-    <div class="title">Pack Smart, Travel Light</div>
-    <div class="subtitle">A category-wise packing list for your move to the US. Check items off, add notes, remove anything that doesn't apply, and add anything that does.</div>
+    <div class="date" id="dateLabel"></div>
+
+    <div class="quote-mark">"</div>
+    <div class="quote" id="quoteText"></div>
+    <div class="quote-author">— Launchpad</div>
 
     <div class="overall">
       <div class="overall-ring">
@@ -481,25 +810,20 @@
         </svg>
       </div>
       <div class="overall-text">
-        <div class="overall-title"><span id="overallDone">0</span> of <span id="overallTotal">0</span> items packed</div>
-        <div class="overall-sub">Across <span id="catCount">0</span> packing categories</div>
+        <div class="overall-title"><span id="overallDone">0</span> of <span id="overallTotal">0</span> tasks complete</div>
+        <div class="overall-sub">Across <span id="catCount">0</span> categories — tap any section below to open it</div>
       </div>
     </div>
 
     <div class="categories" id="categories"></div>
 
-    <div class="add-category-row">
-      <input class="add-input" id="newCatInput" type="text" placeholder="Add a new packing category (e.g. Sports Gear)...">
-      <button class="add-btn" id="newCatBtn">+ Add category</button>
-    </div>
-
-    <div class="footer-note">Customs and airline rules vary — always double-check restricted items and baggage limits with your specific airline before packing.<br>Everything you check or type is saved automatically on this device.</div>
+    <div class="footer-note">This checklist is a general guide — always confirm exact requirements with your university's international office and the U.S. consulate.<br>Everything you check or type is saved automatically on this device.</div>
   </div>
 
   <aside class="side-col">
     <div class="cal-card">
-      <div class="cal-card-title">Packing calendar</div>
-      <div class="cal-card-sub">Days you packed items on. Tap a day for the breakdown.</div>
+      <div class="cal-card-title">Progress calendar</div>
+      <div class="cal-card-sub">Days you completed tasks on. Tap a day for the breakdown.</div>
       <div class="cal-header">
         <div class="cal-month" id="calMonthLabel"></div>
         <div class="cal-nav">
@@ -522,7 +846,7 @@
 </div>
 
 <script>
-  // ===================== ACCESS PIN (shared with main Launchpad site) =====================
+  // ===================== ACCESS PIN =====================
   const PIN_HASH = "070ab0cb88ffc0446d9c038f282b9c69e1a51a269f32d5dd012483142b4fec82";
   const UNLOCK_KEY = "launchpad_unlocked_v1";
 
@@ -530,20 +854,28 @@
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
+
   function unlockApp(){
     document.body.classList.remove('locked');
     const overlay = document.getElementById('lockOverlay');
     if(overlay) overlay.style.display = 'none';
   }
+
   (function initLock(){
     try{
-      if(localStorage.getItem(UNLOCK_KEY) === PIN_HASH){ unlockApp(); return; }
+      if(localStorage.getItem(UNLOCK_KEY) === PIN_HASH){
+        unlockApp();
+        return;
+      }
     }catch(e){}
+
     const boxes = Array.from(document.querySelectorAll('.pin-box'));
     const pinInputs = document.getElementById('pinInputs');
     const errorEl = document.getElementById('lockError');
     const unlockBtn = document.getElementById('lockUnlockBtn');
+
     boxes[0].focus();
+
     boxes.forEach((box, i) => {
       box.addEventListener('input', () => {
         box.value = box.value.replace(/[^0-9]/g, '').slice(0, 1);
@@ -565,7 +897,9 @@
         }
       });
     });
+
     unlockBtn.addEventListener('click', attemptUnlock);
+
     async function attemptUnlock(){
       const code = boxes.map(b => b.value).join('');
       if(code.length !== 6){ showError('Enter all 6 digits.'); return; }
@@ -586,8 +920,8 @@
   })();
 
   // ===================== FIREBASE SYNC =====================
-  // Use the SAME config values as your main Launchpad page so both
-  // pages sync to the same Firebase project.
+  // Replace the placeholder values with your own free Firebase project's
+  // config to sync data across devices. Leave as-is for local-only mode.
   const firebaseConfig = {
       apiKey: "AIzaSyDGSUql4dvz5YbwsQAfgMuCgnfA3ozdkv8",
 	  authDomain: "travelprgs.firebaseapp.com",
@@ -620,127 +954,174 @@
     try{ localStorage.setItem(CAT_WEIGHT_VISIBILITY_KEY, JSON.stringify(weightVisibility)); }catch(e){}
   }
 
-  // ===================== PACKING CATEGORIES =====================
+  // ===================== QUOTES =====================
+  const QUOTES = [
+    "New country, new chapter — you've already done the hardest part by deciding to go.",
+    "Every form you file is one step closer to walking that campus.",
+    "You didn't come this far to stop at the paperwork.",
+    "Checklists today, classrooms across the world tomorrow.",
+    "The visa stamp is just proof of everything you already earned.",
+    "Pack light, dream big.",
+    "This is what preparation for a bigger life looks like.",
+    "One document at a time, one step closer to takeoff.",
+    "You're not just moving countries, you're moving your whole future forward.",
+    "Being organized now buys you peace of mind later.",
+    "Your future campus is waiting. Let's get you there, fully ready.",
+    "Every checkbox here is a rehearsal for the courage this move takes.",
+    "You've got this — one form, one flight, one fresh start.",
+    "Great journeys are built from small, completed tasks.",
+    "Confidence at the visa counter starts with organization at home.",
+    "Somewhere across the ocean, a seat with your name is waiting.",
+    "You're building a life, not just booking a flight.",
+    "Preparation is how ambition becomes real.",
+    "Homesick days will come. Let today not be one of the hard ones — get a task done.",
+    "The distance is temporary. The degree is forever."
+  ];
+
+  function dayOfYear(d){
+    const start = new Date(d.getFullYear(), 0, 0);
+    return Math.floor((d - start) / 86400000);
+  }
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  document.getElementById('quoteText').textContent = QUOTES[dayOfYear(today) % QUOTES.length];
+  document.getElementById('dateLabel').textContent = today.toLocaleDateString(undefined, {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  });
+
+  // ===================== CATEGORY DATA =====================
   const CATEGORIES = [
     {
-      id: "clothing",
-      title: "Clothing & Footwear",
-      tip: "Layer for the climate of your specific city, not just 'the US' generally — Boston winters and California winters are worlds apart. You can buy heavy winter wear locally too, so don't overpack bulky coats if budget/luggage space is tight.",
+      id: "admissions",
+      title: "University Admission & Documents",
+      tip: "Verify every detail on your I-20 (name, program, funding amount) matches your passport exactly — even small mismatches can cause visa delays. Pay the SEVIS I-901 fee at least 3 days before your visa interview and keep several printed copies of your I-20.",
       items: [
-        "Everyday outfits (5-7 sets)",
-        "Warm jacket / coat for winter",
-        "One formal outfit for events or interviews",
-        "Comfortable everyday walking shoes",
-        "Weatherproof / winter boots",
-        "Innerwear & socks (2 weeks supply)",
-        "Sleepwear",
-        "Umbrella or raincoat"
+        "I-20 form received from university",
+        "Official admission / offer letter",
+        "SEVIS I-901 fee paid",
+        "Official transcripts sent to university",
+        "Enrollment confirmation deposit paid",
+        "Course registration / credits confirmed"
       ]
     },
     {
-      id: "documents",
-      title: "Documents & Papers",
-      tip: "Carry all originals in your hand luggage, never checked baggage. Keep a second digital backup (scans in cloud storage or email to yourself) in case anything is lost or damaged in transit.",
+      id: "visa",
+      title: "F-1 Visa Application",
+      tip: "Book your visa interview slot as early as possible — wait times vary widely by consulate. Carry both originals and photocopies of every document, and be ready to clearly explain your program, funding, and post-study plans.",
       items: [
-        "Passport (+ photocopies)",
-        "I-20 original + copies",
-        "Admission / offer letter",
-        "Visa-stamped passport page copy",
-        "SEVIS fee payment receipt",
-        "Financial documents / bank statements",
-        "Sealed academic transcripts",
-        "Test score reports",
-        "Passport-size photographs",
-        "Travel & health insurance documents",
-        "Emergency contact list",
-        "Birth certificate copy",
-        "Driving license & International Driving Permit"
+        "DS-160 form completed and confirmation saved",
+        "Visa fee (MRV) paid",
+        "Visa interview appointment scheduled",
+        "Passport valid 6+ months beyond program end",
+        "Passport-size photos as per U.S. visa specs",
+        "Visa interview document folder prepared"
       ]
     },
     {
-      id: "electronics",
-      title: "Electronics",
-      tip: "The US uses Type A/B plugs at 120V — bring a universal adapter or US-specific one, and check your appliances are voltage-compatible or you'll need a converter too.",
+      id: "finance",
+      title: "Financial Preparation",
+      tip: "Your funding proof should comfortably cover at least one year of tuition plus living costs, as stated on your I-20. Carry a small amount of USD cash for arrival and load the rest onto a forex or travel card.",
       items: [
-        "Laptop + charger",
-        "Universal / US plug adapter",
-        "Power bank",
-        "Headphones",
-        "Phone + charging cable",
-        "External hard drive / USB (document backup)",
-        "Multi-plug extension (US-compatible)"
+        "Bank statements / education loan sanction letter ready",
+        "Affidavit of support (if sponsored) notarized",
+        "Forex card or international travel card arranged",
+        "Tuition payment plan / first installment confirmed",
+        "Emergency fund set aside separately",
+        "Initial USD cash exchanged for arrival"
       ]
     },
     {
-      id: "toiletries-health",
-      title: "Toiletries & Health",
-      tip: "Pack a running supply of any prescription medication (in original packaging) along with a doctor's letter in English. Full-size toiletries are easy to buy locally, so travel-size is enough to get through the first week.",
+      id: "academics",
+      title: "Academic & Test Documents",
+      tip: "Send official test scores directly from the testing agency if your university requires it — self-reported scores are often not enough for final enrollment. Keep both digital scans and physical copies of everything.",
       items: [
-        "Travel-size toothbrush / toothpaste",
-        "Prescription medicines with doctor's note",
-        "Basic first-aid kit",
-        "Skincare / haircare essentials",
-        "Glasses / contact lenses + prescription copy",
-        "Face masks & hand sanitizer",
-        "Personal hygiene products"
+        "GRE / GMAT official scorecard",
+        "TOEFL / IELTS / Duolingo official scorecard",
+        "Sealed official transcripts (extra sets)",
+        "Statement of Purpose — printed copies",
+        "Letters of Recommendation — copies saved",
+        "Updated resume / CV"
       ]
     },
     {
-      id: "study",
-      title: "Study Essentials",
-      tip: "Most textbooks are cheaper to buy or rent once you arrive (or available digitally) — don't overpack books. Prioritize a reliable backpack and any specialty stationery/tools your specific program needs.",
+      id: "health",
+      title: "Health & Insurance",
+      tip: "Check your university's mandatory immunization list well in advance — some vaccines need multiple doses spaced weeks apart. If you take prescription medication, carry a doctor's letter explaining it in English.",
       items: [
-        "Basic stationery (pens, notebook)",
-        "Calculator (if program-specific)",
-        "Laptop bag / backpack",
-        "Backup USB with important files"
+        "General medical checkup completed",
+        "Required vaccinations completed",
+        "Health insurance (university or private) arranged",
+        "Prescription medicines with doctor's note packed",
+        "Copies of medical / vaccination records"
       ]
     },
     {
-      id: "home-comforts",
-      title: "Bedding & Home Comforts",
-      tip: "You'll likely buy bedding and kitchenware locally once you know your room size — pack only a few comfort items to get through the first couple of nights before you can shop.",
+      id: "housing",
+      title: "Housing & Accommodation",
+      tip: "On-campus housing often fills up quickly, so apply the moment applications open. For off-campus options, carefully check lease terms, deposit refund conditions, and proximity to campus before committing.",
       items: [
-        "Travel pillow",
-        "One bedsheet / pillow cover for the first nights",
-        "Reusable water bottle",
-        "A few home spices (check customs limits)",
-        "Basic travel cutlery / mug"
+        "On-campus / off-campus housing researched",
+        "Housing application submitted",
+        "Security deposit paid",
+        "Roommate arrangement confirmed (if applicable)",
+        "US address noted for records / mail forwarding"
       ]
     },
     {
-      id: "personal",
-      title: "Miscellaneous & Personal",
-      tip: "A few familiar comfort items go a long way in the first homesick weeks. Keep a lock and a visible ID tag on every checked bag.",
+      id: "packing",
+      title: "Packing & Essentials",
+      tip: "Keep all original important documents in your hand luggage, never in checked baggage. Confirm your airline's checked-baggage allowance for international students, which is sometimes higher than standard limits.",
       items: [
-        "Family photos / comfort items",
-        "Snacks from home (check customs limits)",
-        "Small gifts for hosts / roommates",
-        "Luggage lock",
-        "Luggage tags with contact info",
-        "Small amount of USD cash + cards"
+        "Weather-appropriate clothing for your destination",
+        "Original documents + copies (passport, I-20, admit letter, financials)",
+        "Electronics and US plug adapters",
+        "Personal medicines packed",
+        "Laptop, chargers, and study essentials"
       ]
     },
     {
-      id: "customs",
-      title: "Customs & Airline Rules",
-      tip: "Rules change often and vary by airline — check your specific carrier's site within a week of departure, not months in advance. Never pack liquids over 100ml, sharp objects, or restricted food items in carry-on.",
+      id: "banking",
+      title: "Banking & Finance in the US",
+      tip: "Many banks offer student accounts with no minimum balance requirement — compare a couple of options before choosing. An SSN is generally only issued if you have a confirmed on-campus job offer, so plan accordingly.",
       items: [
-        "Checked baggage allowance confirmed",
-        "Carry-on liquid / restricted item rules reviewed",
-        "Prohibited items list reviewed for your airline",
-        "Weight limit per bag confirmed",
-        "Important documents kept in carry-on, not checked"
+        "US student bank account shortlisted",
+        "SSN / ITIN application plan understood",
+        "International debit or credit card ready to activate",
+        "First-month budget plan prepared"
+      ]
+    },
+    {
+      id: "predeparture",
+      title: "Pre-Departure Logistics",
+      tip: "Try to book a flight that lands during daytime hours when campus housing and international offices are open. Check whether your university offers a new-student airport pickup service.",
+      items: [
+        "Flight tickets booked",
+        "Travel insurance purchased",
+        "Airport pickup / arrival plan confirmed",
+        "International SIM or eSIM arranged",
+        "University orientation dates noted"
+      ]
+    },
+    {
+      id: "postarrival",
+      title: "Post-Arrival Checklist",
+      tip: "Complete your mandatory international student check-in with the university's international office within the first week of arrival — missing this can affect your visa status. Keep your I-20 and I-94 accessible for the first few months.",
+      items: [
+        "I-94 arrival record verified online",
+        "SEVIS check-in / international office registration done",
+        "Local SIM and bank account opened",
+        "Class registration finalized",
+        "Campus ID and health insurance activated"
       ]
     }
   ];
 
-  // ===================== STORAGE =====================
   function pad(n){ return String(n).padStart(2, '0'); }
   function keyOf(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
   function todayKey(){ return keyOf(new Date()); }
 
-  const STORE_KEY = 'launchpad_packing_data_v1';
+  // ===================== STORAGE =====================
+  const STORE_KEY = 'launchpad_data_v1';
   let allData = {};
   try{
     const raw = localStorage.getItem(STORE_KEY);
@@ -759,7 +1140,9 @@
   }
 
   function getCatData(cat){
-    if(!allData[cat.id]){ allData[cat.id] = { items: {}, custom: [] }; }
+    if(!allData[cat.id]){
+      allData[cat.id] = { items: {}, custom: [] };
+    }
     const cd = allData[cat.id];
     if(!cd.items) cd.items = {};
     if(!cd.custom) cd.custom = [];
@@ -775,10 +1158,6 @@
       if(entry.wc === undefined) entry.wc = false;
     });
     return cd;
-  }
-
-  function allCategories(){
-    return CATEGORIES.concat(Array.isArray(allData._customCategories) ? allData._customCategories : []);
   }
 
   function catWeight(cat){
@@ -797,7 +1176,7 @@
   function renderWeightCard(){
     let grand = 0;
     let rows = '';
-    allCategories().forEach(cat => {
+    CATEGORIES.forEach(cat => {
       const w = catWeight(cat);
       if(w > 0){
         grand += w;
@@ -806,29 +1185,6 @@
     });
     document.getElementById('weightTotal').textContent = grand.toFixed(2) + ' kg';
     document.getElementById('weightBreakdown').innerHTML = rows || `<div class="weight-empty">No weighed items checked yet.</div>`;
-  }
-
-  function addCategory(){
-    const input = document.getElementById('newCatInput');
-    const val = input.value.trim();
-    if(!val) return;
-    if(!Array.isArray(allData._customCategories)) allData._customCategories = [];
-    const id = 'custom-' + Date.now() + Math.random().toString(16).slice(2, 6);
-    allData._customCategories.push({ id, title: val, tip: 'Your own category — add items below and track their weight.', items: [], custom: true });
-    saveAll();
-    openState[id] = true;
-    input.value = '';
-    render();
-    renderCalendar();
-  }
-
-  function removeCustomCategory(id){
-    if(!confirm('Remove this category and all its items?')) return;
-    allData._customCategories = (allData._customCategories || []).filter(c => c.id !== id);
-    delete allData[id];
-    saveAll();
-    render();
-    renderCalendar();
   }
 
   function catCounts(cat){
@@ -850,7 +1206,7 @@
 
   function buildHistory(){
     const history = {};
-    allCategories().forEach(cat => {
+    CATEGORIES.forEach(cat => {
       const cd = getCatData(cat);
       cat.items.forEach((_, i) => {
         const entry = cd.items[i];
@@ -869,11 +1225,9 @@
     return history;
   }
 
+  // ===================== RENDER =====================
   const catsEl = document.getElementById('categories');
   const openState = {};
-
-  document.getElementById('newCatBtn').addEventListener('click', addCategory);
-  document.getElementById('newCatInput').addEventListener('keydown', (e) => { if(e.key === 'Enter') addCategory(); });
 
   function captureFocus(){
     const active = document.activeElement;
@@ -920,7 +1274,7 @@
     catsEl.innerHTML = '';
     let grandDone = 0, grandTotal = 0;
 
-    allCategories().forEach((cat, ci) => {
+    CATEGORIES.forEach((cat, ci) => {
       const cd = getCatData(cat);
       const { done, total } = catCounts(cat);
       grandDone += done; grandTotal += total;
@@ -936,29 +1290,26 @@
         <div class="cat-index">${String(ci + 1).padStart(2, '0')}</div>
         <div class="cat-title-wrap">
           <div class="cat-title">${catTitle(cat)}</div>
-          <div class="cat-progress-text">${done} of ${total} packed</div>
+          <div class="cat-progress-text">${done} of ${total} done</div>
         </div>
         <div class="cat-mini-bar"><div class="cat-mini-fill" style="width:${total ? (done/total*100) : 0}%"></div></div>
         <button class="cat-rename-btn" title="Rename category">&#9998;</button>
-        ${cat.custom ? '<button class="cat-remove-btn" title="Remove category">&times;</button>' : ''}
         <svg class="chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       `;
-      header.addEventListener('click', () => { openState[cat.id] = !openState[cat.id]; render(); });
+      header.addEventListener('click', () => {
+        openState[cat.id] = !openState[cat.id];
+        render();
+      });
       header.querySelector('.cat-rename-btn').addEventListener('click', (e) => {
         e.stopPropagation();
         renameCategory(cat);
       });
-      if(cat.custom){
-        header.querySelector('.cat-remove-btn').addEventListener('click', (e) => {
-          e.stopPropagation();
-          removeCustomCategory(cat.id);
-        });
-      }
 
       const panel = document.createElement('div');
       panel.className = 'cat-panel';
       const inner = document.createElement('div');
       inner.className = 'cat-panel-inner';
+
       inner.innerHTML = `
         <div class="tip-box"><b>Keep in mind:</b> ${cat.tip}</div>
         <label class="cat-weight-toggle">
@@ -972,20 +1323,33 @@
         catEl.classList.toggle('hide-weight', !e.target.checked);
       });
 
-      const list = document.createElement('div');
-      let anyDeleted = false;
+      if(cat.id === 'packing'){
+        const linkRow = document.createElement('a');
+        linkRow.href = 'packing-itinerary.html';
+        linkRow.className = 'itinerary-link';
+        linkRow.innerHTML = `Open detailed packing itinerary <span>&#8594;</span>`;
+        inner.appendChild(linkRow);
+      }
 
+      const list = document.createElement('div');
+
+      let anyDeleted = false;
       cat.items.forEach((label, i) => {
         const entry = cd.items[i];
         if(entry.deleted){ anyDeleted = true; return; }
         const row = buildItemRow(label, entry, () => {
-          toggleEntry(entry); saveAll(); render(); renderCalendar();
+          toggleEntry(entry);
+          saveAll();
+          render();
+          afterChange();
         }, (val) => { entry.t = val; saveAll(); }, (val) => {
           entry.w = val; saveAll(); renderWeightCard();
         }, (checked) => {
           entry.wc = checked; saveAll(); renderWeightCard();
         }, () => {
-          entry.deleted = true; saveAll(); render();
+          entry.deleted = true;
+          saveAll();
+          render();
         });
         row.dataset.itemKey = 'def-' + i;
         list.appendChild(row);
@@ -993,14 +1357,18 @@
 
       cd.custom.forEach((entry) => {
         const row = buildItemRow(entry.label, entry, () => {
-          toggleEntry(entry); saveAll(); render(); renderCalendar();
+          toggleEntry(entry);
+          saveAll();
+          render();
+          afterChange();
         }, (val) => { entry.t = val; saveAll(); }, (val) => {
           entry.w = val; saveAll(); renderWeightCard();
         }, (checked) => {
           entry.wc = checked; saveAll(); renderWeightCard();
         }, () => {
           cd.custom = cd.custom.filter(x => x.id !== entry.id);
-          saveAll(); render();
+          saveAll();
+          render();
         });
         row.dataset.itemKey = 'custom-' + entry.id;
         list.appendChild(row);
@@ -1014,29 +1382,28 @@
         restore.textContent = 'Restore removed default items';
         restore.addEventListener('click', () => {
           cat.items.forEach((_, i) => { cd.items[i].deleted = false; });
-          saveAll(); render();
+          saveAll();
+          render();
         });
         inner.appendChild(restore);
       }
 
-      const addRow = document.createElement('div');
+      const addRow = document.createElement('form');
       addRow.className = 'add-row';
       addRow.innerHTML = `
-        <input class="add-input" type="text" placeholder="Add your own packing item...">
-        <button class="add-btn">Add</button>
+        <input class="add-input" type="text" placeholder="Add your own checklist item...">
+        <button class="add-btn" type="submit">Add</button>
       `;
       const addInput = addRow.querySelector('.add-input');
-      const addBtn = addRow.querySelector('.add-btn');
       function addCustom(){
         const val = addInput.value.trim();
         if(!val) return;
-        cd.custom.push({ id: 'c' + Date.now() + Math.random().toString(16).slice(2), label: val, c: false, t: '' });
+        cd.custom.push({ id: 'c' + Date.now() + Math.random().toString(16).slice(2), label: val, c: false, t: '', w: '', wc: false });
         saveAll();
         openState[cat.id] = true;
         render();
       }
-      addBtn.addEventListener('click', addCustom);
-      addInput.addEventListener('keydown', (e) => { if(e.key === 'Enter') addCustom(); });
+      addRow.addEventListener('submit', (e) => { e.preventDefault(); addCustom(); });
       inner.appendChild(addRow);
 
       panel.appendChild(inner);
@@ -1047,7 +1414,7 @@
 
     document.getElementById('overallDone').textContent = grandDone;
     document.getElementById('overallTotal').textContent = grandTotal;
-    document.getElementById('catCount').textContent = allCategories().length;
+    document.getElementById('catCount').textContent = CATEGORIES.length;
     const circumference = 2 * Math.PI * 24;
     const frac = grandTotal ? grandDone / grandTotal : 0;
     document.getElementById('overallRing').setAttribute('stroke-dasharray', `${(circumference * frac).toFixed(1)} ${circumference.toFixed(1)}`);
@@ -1075,7 +1442,7 @@
         <span>Count</span>
       </label>
       ${entry.c && entry.d ? `<span class="item-date">${formatShortDate(entry.d)}</span>` : ''}
-      <button class="remove-btn" title="Remove">&times;</button>
+      ${onRemove ? '<button class="remove-btn" title="Remove">&times;</button>' : ''}
     `;
     row.querySelector('.field').value = entry.t;
     row.querySelector('.weight-field').value = entry.w || '';
@@ -1084,7 +1451,9 @@
     row.querySelector('.field').addEventListener('input', (e) => onNote(e.target.value));
     row.querySelector('.weight-field').addEventListener('input', (e) => onWeightChange(e.target.value));
     row.querySelector('.weight-toggle').addEventListener('change', (e) => onWeightToggle(e.target.checked));
-    row.querySelector('.remove-btn').addEventListener('click', onRemove);
+    if(onRemove){
+      row.querySelector('.remove-btn').addEventListener('click', onRemove);
+    }
     return row;
   }
 
@@ -1110,7 +1479,6 @@
   });
 
   function catTitle(cat){
-    if(cat.custom) return cat.title;
     const overrides = allData._titleOverrides || {};
     return overrides[cat.id] || cat.title;
   }
@@ -1121,19 +1489,15 @@
     if(next === null) return;
     const trimmed = next.trim();
     if(!trimmed || trimmed === current) return;
-    if(cat.custom){
-      cat.title = trimmed;
-    } else {
-      if(!allData._titleOverrides) allData._titleOverrides = {};
-      allData._titleOverrides[cat.id] = trimmed;
-    }
+    if(!allData._titleOverrides) allData._titleOverrides = {};
+    allData._titleOverrides[cat.id] = trimmed;
     saveAll();
     render();
     renderCalendar();
   }
 
   function catTitleById(id){
-    const cat = allCategories().find(c => c.id === id);
+    const cat = CATEGORIES.find(c => c.id === id);
     return cat ? catTitle(cat) : id;
   }
 
@@ -1188,7 +1552,7 @@
 
   function renderCalDetail(history){
     if(!calSelectedKey){
-      calDetailEl.innerHTML = `<div class="cal-detail-empty">Tap any day to see what you packed.</div>`;
+      calDetailEl.innerHTML = `<div class="cal-detail-empty">Tap any day to see what you completed.</div>`;
       return;
     }
     const rec = history[calSelectedKey];
@@ -1196,11 +1560,11 @@
     const label = new Date(y, m - 1, d).toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
 
     if(!rec || rec.total === 0){
-      calDetailEl.innerHTML = `<div class="cal-detail-date">${label}</div><div class="cal-detail-empty">No items packed this day.</div>`;
+      calDetailEl.innerHTML = `<div class="cal-detail-date">${label}</div><div class="cal-detail-empty">No tasks completed this day.</div>`;
       return;
     }
 
-    let rows = `<div class="cal-detail-date">${label} — ${rec.total} packed</div>`;
+    let rows = `<div class="cal-detail-date">${label} — ${rec.total} completed</div>`;
     Object.keys(rec.byCat).forEach(catId => {
       rows += `<div class="cal-detail-row"><span>${catTitleById(catId)}</span><span>${rec.byCat[catId]}</span></div>`;
     });
@@ -1218,10 +1582,108 @@
     renderCalendar();
   });
 
+  // ===================== MILESTONES & CELEBRATIONS =====================
+  const MILESTONE_KEY = 'launchpad_milestones_v1';
+  let shownMilestones = [];
+  try{
+    const raw = localStorage.getItem(MILESTONE_KEY);
+    shownMilestones = raw ? JSON.parse(raw) : [];
+  }catch(e){ shownMilestones = []; }
+
+  function saveMilestones(){
+    try{ localStorage.setItem(MILESTONE_KEY, JSON.stringify(shownMilestones)); }catch(e){}
+  }
+
+  const OVERALL_MILESTONES = [
+    { pct: 25, emoji: '🌱', text: "Great start — 25% of your prep is done!" },
+    { pct: 50, emoji: '🚀', text: "Halfway there! Keep going." },
+    { pct: 75, emoji: '✈️', text: "Almost boarding — 75% complete!" },
+    { pct: 100, emoji: '🎓', text: "Fully prepped! You're ready for takeoff." }
+  ];
+
+  function afterChange(){
+    renderCalendar();
+    checkMilestones();
+  }
+
+  function checkMilestones(){
+    let grandDone = 0, grandTotal = 0;
+    CATEGORIES.forEach(cat => {
+      const { done, total } = catCounts(cat);
+      grandDone += done; grandTotal += total;
+
+      if(total > 0 && done === total){
+        const key = 'cat-' + cat.id + '-100';
+        if(!shownMilestones.includes(key)){
+          shownMilestones.push(key);
+          saveMilestones();
+          queueCelebration('✅', `${catTitle(cat)} — fully complete!`);
+        }
+      }
+    });
+
+    if(grandTotal === 0) return;
+    const pct = (grandDone / grandTotal) * 100;
+    for(let i = OVERALL_MILESTONES.length - 1; i >= 0; i--){
+      const ms = OVERALL_MILESTONES[i];
+      const key = 'overall-' + ms.pct;
+      if(pct >= ms.pct && !shownMilestones.includes(key)){
+        shownMilestones.push(key);
+        saveMilestones();
+        queueCelebration(ms.emoji, ms.text);
+        break;
+      }
+    }
+  }
+
+  let celebrationQueue = [];
+  let celebrationShowing = false;
+
+  function queueCelebration(emoji, text){
+    celebrationQueue.push({ emoji, text });
+    if(!celebrationShowing) showNextCelebration();
+  }
+
+  function showNextCelebration(){
+    if(celebrationQueue.length === 0){ celebrationShowing = false; return; }
+    celebrationShowing = true;
+    const { emoji, text } = celebrationQueue.shift();
+    document.getElementById('celebrateEmoji').textContent = emoji;
+    document.getElementById('celebrateText').textContent = text;
+    const overlay = document.getElementById('celebrateOverlay');
+    overlay.classList.add('show');
+    spawnConfetti();
+  }
+
+  function closeCelebration(){
+    document.getElementById('celebrateOverlay').classList.remove('show');
+    document.getElementById('confettiLayer').innerHTML = '';
+    setTimeout(showNextCelebration, 250);
+  }
+  document.getElementById('celebrateBtn').addEventListener('click', closeCelebration);
+  document.getElementById('celebrateOverlay').addEventListener('click', (e) => {
+    if(e.target.id === 'celebrateOverlay') closeCelebration();
+  });
+
+  function spawnConfetti(){
+    const layer = document.getElementById('confettiLayer');
+    layer.innerHTML = '';
+    const colors = ['#FF8FCB', '#B47AE0', '#FBF3FA', '#2ED47A'];
+    for(let i = 0; i < 28; i++){
+      const piece = document.createElement('div');
+      piece.className = 'confetti-piece';
+      piece.style.left = Math.random() * 100 + '%';
+      piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+      piece.style.animationDuration = (1.8 + Math.random() * 1.4) + 's';
+      piece.style.animationDelay = (Math.random() * 0.4) + 's';
+      layer.appendChild(piece);
+    }
+  }
+
   async function initFirebase(){
     if(!isConfigured){
       setSyncStatus('offline');
-      render(); renderCalendar();
+      render(); renderCalendar(); checkMilestones();
       return;
     }
     setSyncStatus('connecting');
@@ -1231,7 +1693,7 @@
       firestoreFns = fs;
       const app = initializeApp(firebaseConfig);
       db = fs.getFirestore(app);
-      docRef = fs.doc(db, 'launchpad', 'packing-data');
+      docRef = fs.doc(db, 'launchpad', 'main-data');
 
       fs.onSnapshot(docRef, (snap) => {
         const incoming = snap.exists() ? snap.data() : {};
@@ -1240,16 +1702,16 @@
         try{ localStorage.setItem(STORE_KEY, JSON.stringify(allData)); }catch(e){}
         setSyncStatus('synced');
         if(!changed) return; // same data we just saved — skip re-render
-        render(); renderCalendar();
+        render(); renderCalendar(); checkMilestones();
       }, (err) => {
         console.error('Firestore listen failed', err);
         setSyncStatus('offline');
-        render(); renderCalendar();
+        render(); renderCalendar(); checkMilestones();
       });
     }catch(e){
       console.error('Firebase init failed', e);
       setSyncStatus('offline');
-      render(); renderCalendar();
+      render(); renderCalendar(); checkMilestones();
     }
   }
 
